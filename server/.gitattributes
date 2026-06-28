@@ -1,0 +1,3 @@
+# Make Git normalize line endings to LF when staging
+# This only affects text files, i.e. binary files are untouched by this
+* text=auto
