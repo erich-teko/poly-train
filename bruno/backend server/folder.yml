@@ -1,0 +1,12 @@
+info:
+  name: backend server
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit
+  variables:
+    - name: port
+      value: "3100"
+    - name: host
+      value: localhost
