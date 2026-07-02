@@ -1,24 +1,20 @@
 import express from "express";
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import "dotenv/config";
+import authRoutes from "./routes/auth.js";
+import protectedRoute from "./routes/protectedRoute.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
 app.use(express.json());
+app.use("/auth", authRoutes);
+app.use("", protectedRoute);
 
 mongoose
-    .connect(process.env.MONGODB_URI)
+    .connect(encodeURI(process.env.MONGODB_URI))
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("Error connecting to MongoDB:", err));
-
-const userSchema = new Schema({
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-});
-
-const user = mongoose.model("user", userSchema);
 
 app.get("/", (req, res) => {
     const serverInfo = {
@@ -29,25 +25,6 @@ app.get("/", (req, res) => {
     };
 
     res.send(serverInfo);
-});
-
-app.get("/users", async (req, res) => {
-    try {
-        const users = await user.find();
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-app.post("/users", async (req, res) => {
-    const newUser = new user(req.body);
-    try {
-        const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
 });
 
 app.listen(port, () => {
