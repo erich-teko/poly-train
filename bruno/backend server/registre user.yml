@@ -1,17 +1,17 @@
 info:
-  name: users Post
+  name: registre user
   type: http
-  seq: 3
+  seq: 2
 
 http:
   method: POST
-  url: http://{{host}}:{{port}}/users
+  url: http://{{host}}:{{port}}/auth/register
   body:
     type: json
-    data: |
+    data: |-
       {
-        "username": "Erich",
-        "email": "erich.imfeld@edu.teko.ch",
+        "username": "HansWurst",
+        "email": "hans.wurst@xyz.abc",
         "password": "12345"
       }
   auth: inherit
