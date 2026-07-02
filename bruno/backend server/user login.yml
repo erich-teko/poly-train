@@ -1,0 +1,22 @@
+info:
+  name: user login
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://{{host}}:{{port}}/auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "email": "hans.wurst@xyz.abc",
+        "password": "12345"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
