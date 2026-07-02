@@ -4,9 +4,28 @@ info:
   seq: 2
 
 request:
-  auth: inherit
+  auth:
+    type: bearer
+    token: "{{token}}"
   variables:
     - name: port
       value: "3100"
     - name: host
       value: localhost
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: ""
+        method: jsonq
+      variable:
+        name: token
+        scope: runtime
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: ""
+        method: jsonq
+      variable:
+        name: userId
+        scope: runtime

@@ -2,12 +2,14 @@ import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
 import authRoutes from "./routes/auth.js";
+import protectedRoute from "./routes/protectedRoute.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
 app.use(express.json());
 app.use("/auth", authRoutes);
+app.use("", protectedRoute);
 
 mongoose
     .connect(encodeURI(process.env.MONGODB_URI))
