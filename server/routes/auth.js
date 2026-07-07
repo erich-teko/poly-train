@@ -20,6 +20,15 @@ router.post("/register", async (req, res) => {
     }
 });
 
+// Logout endpoint
+router.post('/logout', (req, res) => {
+    /* 
+    You may want to perform additional
+    cleanup or session invalidation here
+     */
+    res.clearCookie('token').send('Logged out successfully');
+});
+
 // Login endpoint
 router.post("/login", async (req, res) => {
     try {

@@ -1,0 +1,34 @@
+info:
+  name: user logout
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://{{host}}:{{port}}/auth/logout
+  body:
+    type: json
+    data: ""
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        // Save to a variable for use in later requests
+        bru.setVar("token", res.body.token);
+        bru.setVar("userId", res.body.userId);
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: ""
+        method: jsonq
+      variable:
+        name: ""
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
