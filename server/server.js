@@ -4,6 +4,9 @@ import "dotenv/config";
 import authRoutes from "./routes/auth.js";
 import protectedRoute from "./routes/protectedRoute.js";
 
+import dns from "node:dns/promises";
+dns.setServers(["1.1.1.1", "1.0.0.1"]);
+
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
@@ -12,21 +15,21 @@ app.use("/auth", authRoutes);
 app.use("", protectedRoute);
 
 mongoose
-    .connect(encodeURI(process.env.MONGODB_URI))
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.error("Error connecting to MongoDB:", err));
+  .connect(encodeURI(process.env.MONGODB_URI))
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 app.get("/", (req, res) => {
-    const serverInfo = {
-        name: "Poly-Train Server",
-        version: "1.0.0",
-        description: "This is a sample server for the Poly-Train application.",
-        developer: ["Adrian", "Erich", "Simon"],
-    };
+  const serverInfo = {
+    name: "Poly-Train Server",
+    version: "1.0.0",
+    description: "This is a sample server for the Poly-Train application.",
+    developer: ["Adrian", "Erich", "Simon"],
+  };
 
-    res.send(serverInfo);
+  res.send(serverInfo);
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });

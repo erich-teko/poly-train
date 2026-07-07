@@ -1,0 +1,36 @@
+info:
+  name: journey save
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: http://{{host}}:{{port}}/journeys
+  body:
+    type: json
+    data: |-
+      {
+        "startLocation": "Luzern",
+        "destinationLocation": "Hamburg",
+        "startDate": "2026-07-10",
+        "endDate": "2026-07-13",
+        "stages": []
+      }
+  auth: inherit
+
+runtime:
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: ""
+        method: jsonq
+      variable:
+        name: ""
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "./User";
+import User from "./User.js";
 
 const stageTypes = Object.freeze({
   JOURNEY: 0,
@@ -67,7 +67,7 @@ const journeysSchema = new mongoose.Schema({
   },
   stages: {
     type: [stagesSchema],
-    required: true,
+    //required: true,
   },
 });
 
