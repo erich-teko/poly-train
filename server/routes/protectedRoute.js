@@ -37,4 +37,28 @@ router.post("/journeys", checkAuth, async (req, res) => {
   }
 });
 
+router.put("/journeys/:journeyId", checkAuth, async (req, res) => {
+  try {
+    const journeyId = req.params.journeyId;
+    const { startLocation, destinationLocation, startDate, endDate, stages } = req.body;
+    const journey = await Journey.findById(journeyId);
+    if (!journey) {
+      return res.status(404).json({ error: "Journey not found" });
+    }
+    // Check if the authenticated user is the owner of the journey
+    if (journey.ownerId.toString() !== req.userData.userId) {
+      return res.status(403).json({ error: "Unauthorized to update this journey" });
+    }
+    journey.startLocation = startLocation;
+    journey.destinationLocation = destinationLocation;
+    journey.startDate = startDate;
+    journey.endDate = endDate;
+    journey.stages = stages;
+    await journey.save();
+    res.status(200).json(journey);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update journey" });
+  }
+});
+
 export default router;
