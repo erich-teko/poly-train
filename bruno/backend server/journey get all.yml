@@ -1,0 +1,26 @@
+info:
+  name: journey get all
+  type: http
+  seq: 9
+
+http:
+  method: GET
+  url: http://{{host}}:{{port}}/journeys
+  auth: inherit
+
+runtime:
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: ""
+        method: jsonq
+      variable:
+        name: ""
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

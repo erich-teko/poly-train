@@ -79,4 +79,16 @@ router.delete("/journeys/:journeyId", checkAuth, async (req, res) => {
   }
 });
 
+router.get("/journeys", checkAuth, async (req, res) => {
+  try {
+    const ownerId = req.userData.userId;
+    const journeys = await Journey.find({ ownerId });
+    res.status(200).json(journeys);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve journeys" });
+  }
+});
+
+
+
 export default router;
