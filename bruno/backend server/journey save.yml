@@ -11,10 +11,866 @@ http:
     data: |-
       {
         "startLocation": "Luzern",
-        "destinationLocation": "Hamburg",
+        "destinationLocation": "Paris",
         "startDate": "2026-07-10",
         "endDate": "2026-07-13",
-        "stages": []
+        "stages": [
+          {
+            "type": 2,
+            "stageStart": "Luzern",
+            "stageEnd": "Luzern",
+            "startDate": "2026-07-10",
+            "endDate": "2026-07-10",
+            "note": "Treffpunkt bei der TEKO"
+          },
+          {
+            "type": 1,
+            "stageStart": "Luzern",
+            "stageEnd": "Paris Gare de Lyon",
+            "startDate": "2026-07-10T11:54:00+0200",
+            "endDate": "2026-07-10T17:38:00+0200",
+            "note": "Ab Bahnhof Luzern",
+            "trainConnection": {
+              "from": {
+                "station": {
+                  "id": "8505000",
+                  "name": "Luzern",
+                  "score": null,
+                  "coordinate": {
+                    "type": "WGS84",
+                    "x": 47.050165,
+                    "y": 8.310172
+                  },
+                  "distance": null
+                },
+                "arrival": null,
+                "arrivalTimestamp": null,
+                "departure": "2026-07-10T11:54:00+0200",
+                "departureTimestamp": 1783677240,
+                "delay": null,
+                "platform": "7",
+                "prognosis": {
+                  "platform": null,
+                  "arrival": null,
+                  "departure": null,
+                  "capacity1st": null,
+                  "capacity2nd": null
+                },
+                "realtimeAvailability": null,
+                "location": {
+                  "id": "8505000",
+                  "name": "Luzern",
+                  "score": null,
+                  "coordinate": {
+                    "type": "WGS84",
+                    "x": 47.050165,
+                    "y": 8.310172
+                  },
+                  "distance": null
+                }
+              },
+              "to": {
+                "station": {
+                  "id": "8768600",
+                  "name": "Paris Gare de Lyon",
+                  "score": null,
+                  "coordinate": {
+                    "type": "WGS84",
+                    "x": 48.844996,
+                    "y": 2.373901
+                  },
+                  "distance": null
+                },
+                "arrival": "2026-07-10T17:38:00+0200",
+                "arrivalTimestamp": 1783697880,
+                "departure": null,
+                "departureTimestamp": null,
+                "delay": null,
+                "platform": null,
+                "prognosis": {
+                  "platform": null,
+                  "arrival": null,
+                  "departure": null,
+                  "capacity1st": null,
+                  "capacity2nd": null
+                },
+                "realtimeAvailability": null,
+                "location": {
+                  "id": "8768600",
+                  "name": "Paris Gare de Lyon",
+                  "score": null,
+                  "coordinate": {
+                    "type": "WGS84",
+                    "x": 48.844996,
+                    "y": 2.373901
+                  },
+                  "distance": null
+                }
+              },
+              "duration": "00d05:44:00",
+              "transfers": 3,
+              "service": null,
+              "products": [
+                "IC 21",
+                "ICE",
+                "TER",
+                "TGV"
+              ],
+              "capacity1st": null,
+              "capacity2nd": null,
+              "sections": [
+                {
+                  "journey": {
+                    "name": "000672",
+                    "category": "IC",
+                    "subcategory": null,
+                    "categoryCode": null,
+                    "number": "21",
+                    "operator": "SBB",
+                    "to": "Olten",
+                    "passList": [
+                      {
+                        "station": {
+                          "id": "8505000",
+                          "name": "Luzern",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.050165,
+                            "y": 8.310172
+                          },
+                          "distance": null
+                        },
+                        "arrival": null,
+                        "arrivalTimestamp": null,
+                        "departure": "2026-07-10T11:54:00+0200",
+                        "departureTimestamp": 1783677240,
+                        "delay": null,
+                        "platform": "7",
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8505000",
+                          "name": "Luzern",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.050165,
+                            "y": 8.310172
+                          },
+                          "distance": null
+                        }
+                      },
+                      {
+                        "station": {
+                          "id": "8500218",
+                          "name": "Olten",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.351927,
+                            "y": 7.907693
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T12:28:00+0200",
+                        "arrivalTimestamp": 1783679280,
+                        "departure": null,
+                        "departureTimestamp": null,
+                        "delay": null,
+                        "platform": "10",
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8500218",
+                          "name": "Olten",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.351927,
+                            "y": 7.907693
+                          },
+                          "distance": null
+                        }
+                      }
+                    ],
+                    "capacity1st": null,
+                    "capacity2nd": null
+                  },
+                  "walk": null,
+                  "departure": {
+                    "station": {
+                      "id": "8505000",
+                      "name": "Luzern",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.050165,
+                        "y": 8.310172
+                      },
+                      "distance": null
+                    },
+                    "arrival": null,
+                    "arrivalTimestamp": null,
+                    "departure": "2026-07-10T11:54:00+0200",
+                    "departureTimestamp": 1783677240,
+                    "delay": null,
+                    "platform": "7",
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8505000",
+                      "name": "Luzern",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.050165,
+                        "y": 8.310172
+                      },
+                      "distance": null
+                    }
+                  },
+                  "arrival": {
+                    "station": {
+                      "id": "8500218",
+                      "name": "Olten",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.351927,
+                        "y": 7.907693
+                      },
+                      "distance": null
+                    },
+                    "arrival": "2026-07-10T12:28:00+0200",
+                    "arrivalTimestamp": 1783679280,
+                    "departure": null,
+                    "departureTimestamp": null,
+                    "delay": null,
+                    "platform": "10",
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8500218",
+                      "name": "Olten",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.351927,
+                        "y": 7.907693
+                      },
+                      "distance": null
+                    }
+                  }
+                },
+                {
+                  "journey": {
+                    "name": "000106",
+                    "category": "ICE",
+                    "subcategory": null,
+                    "categoryCode": null,
+                    "number": "000106",
+                    "operator": "SBB",
+                    "to": "Basel Bad Bf",
+                    "passList": [
+                      {
+                        "station": {
+                          "id": "8500218",
+                          "name": "Olten",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.351927,
+                            "y": 7.907693
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T12:28:00+0200",
+                        "arrivalTimestamp": 1783679280,
+                        "departure": "2026-07-10T12:33:00+0200",
+                        "departureTimestamp": 1783679580,
+                        "delay": null,
+                        "platform": "7",
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8500218",
+                          "name": "Olten",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.351927,
+                            "y": 7.907693
+                          },
+                          "distance": null
+                        }
+                      },
+                      {
+                        "station": {
+                          "id": "8500023",
+                          "name": "Liestal",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.484453,
+                            "y": 7.731377
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T12:53:00+0200",
+                        "arrivalTimestamp": 1783680780,
+                        "departure": "2026-07-10T12:54:00+0200",
+                        "departureTimestamp": 1783680840,
+                        "delay": null,
+                        "platform": null,
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8500023",
+                          "name": "Liestal",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.484453,
+                            "y": 7.731377
+                          },
+                          "distance": null
+                        }
+                      },
+                      {
+                        "station": {
+                          "id": "8500010",
+                          "name": "Basel SBB",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.547403,
+                            "y": 7.589564
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T13:04:00+0200",
+                        "arrivalTimestamp": 1783681440,
+                        "departure": null,
+                        "departureTimestamp": null,
+                        "delay": null,
+                        "platform": "10",
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8500010",
+                          "name": "Basel SBB",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.547403,
+                            "y": 7.589564
+                          },
+                          "distance": null
+                        }
+                      }
+                    ],
+                    "capacity1st": null,
+                    "capacity2nd": null
+                  },
+                  "walk": null,
+                  "departure": {
+                    "station": {
+                      "id": "8500218",
+                      "name": "Olten",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.351927,
+                        "y": 7.907693
+                      },
+                      "distance": null
+                    },
+                    "arrival": "2026-07-10T12:28:00+0200",
+                    "arrivalTimestamp": 1783679280,
+                    "departure": "2026-07-10T12:33:00+0200",
+                    "departureTimestamp": 1783679580,
+                    "delay": null,
+                    "platform": "7",
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8500218",
+                      "name": "Olten",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.351927,
+                        "y": 7.907693
+                      },
+                      "distance": null
+                    }
+                  },
+                  "arrival": {
+                    "station": {
+                      "id": "8500010",
+                      "name": "Basel SBB",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.547403,
+                        "y": 7.589564
+                      },
+                      "distance": null
+                    },
+                    "arrival": "2026-07-10T13:04:00+0200",
+                    "arrivalTimestamp": 1783681440,
+                    "departure": null,
+                    "departureTimestamp": null,
+                    "delay": null,
+                    "platform": "10",
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8500010",
+                      "name": "Basel SBB",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.547403,
+                        "y": 7.589564
+                      },
+                      "distance": null
+                    }
+                  }
+                },
+                {
+                  "journey": {
+                    "name": "096282",
+                    "category": "TER",
+                    "subcategory": null,
+                    "categoryCode": null,
+                    "number": "096282",
+                    "operator": "SBB",
+                    "to": "Mulhouse",
+                    "passList": [
+                      {
+                        "station": {
+                          "id": "8500010",
+                          "name": "Basel SBB",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.547403,
+                            "y": 7.589564
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T13:04:00+0200",
+                        "arrivalTimestamp": 1783681440,
+                        "departure": "2026-07-10T13:24:00+0200",
+                        "departureTimestamp": 1783682640,
+                        "delay": null,
+                        "platform": "31",
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8500010",
+                          "name": "Basel SBB",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.547403,
+                            "y": 7.589564
+                          },
+                          "distance": null
+                        }
+                      },
+                      {
+                        "station": {
+                          "id": "8718206",
+                          "name": "Mulhouse",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.741954,
+                            "y": 7.343059
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T13:44:00+0200",
+                        "arrivalTimestamp": 1783683840,
+                        "departure": null,
+                        "departureTimestamp": null,
+                        "delay": null,
+                        "platform": null,
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8718206",
+                          "name": "Mulhouse",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.741954,
+                            "y": 7.343059
+                          },
+                          "distance": null
+                        }
+                      }
+                    ],
+                    "capacity1st": null,
+                    "capacity2nd": null
+                  },
+                  "walk": null,
+                  "departure": {
+                    "station": {
+                      "id": "8500010",
+                      "name": "Basel SBB",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.547403,
+                        "y": 7.589564
+                      },
+                      "distance": null
+                    },
+                    "arrival": "2026-07-10T13:04:00+0200",
+                    "arrivalTimestamp": 1783681440,
+                    "departure": "2026-07-10T13:24:00+0200",
+                    "departureTimestamp": 1783682640,
+                    "delay": null,
+                    "platform": "31",
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8500010",
+                      "name": "Basel SBB",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.547403,
+                        "y": 7.589564
+                      },
+                      "distance": null
+                    }
+                  },
+                  "arrival": {
+                    "station": {
+                      "id": "8718206",
+                      "name": "Mulhouse",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.741954,
+                        "y": 7.343059
+                      },
+                      "distance": null
+                    },
+                    "arrival": "2026-07-10T13:44:00+0200",
+                    "arrivalTimestamp": 1783683840,
+                    "departure": null,
+                    "departureTimestamp": null,
+                    "delay": null,
+                    "platform": null,
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8718206",
+                      "name": "Mulhouse",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.741954,
+                        "y": 7.343059
+                      },
+                      "distance": null
+                    }
+                  }
+                },
+                {
+                  "journey": {
+                    "name": "009222",
+                    "category": "TGV",
+                    "subcategory": null,
+                    "categoryCode": null,
+                    "number": "612B",
+                    "operator": "SNCF",
+                    "to": "Paris Gare de Lyon",
+                    "passList": [
+                      {
+                        "station": {
+                          "id": "8718206",
+                          "name": "Mulhouse",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.741954,
+                            "y": 7.343059
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T13:44:00+0200",
+                        "arrivalTimestamp": 1783683840,
+                        "departure": "2026-07-10T14:56:00+0200",
+                        "departureTimestamp": 1783688160,
+                        "delay": null,
+                        "platform": null,
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8718206",
+                          "name": "Mulhouse",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.741954,
+                            "y": 7.343059
+                          },
+                          "distance": null
+                        }
+                      },
+                      {
+                        "station": {
+                          "id": "8771304",
+                          "name": "Dijon",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.322954,
+                            "y": 5.026144
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T15:58:00+0200",
+                        "arrivalTimestamp": 1783691880,
+                        "departure": "2026-07-10T16:02:00+0200",
+                        "departureTimestamp": 1783692120,
+                        "delay": null,
+                        "platform": null,
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8771304",
+                          "name": "Dijon",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 47.322954,
+                            "y": 5.026144
+                          },
+                          "distance": null
+                        }
+                      },
+                      {
+                        "station": {
+                          "id": "8768600",
+                          "name": "Paris Gare de Lyon",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 48.844996,
+                            "y": 2.373901
+                          },
+                          "distance": null
+                        },
+                        "arrival": "2026-07-10T17:38:00+0200",
+                        "arrivalTimestamp": 1783697880,
+                        "departure": null,
+                        "departureTimestamp": null,
+                        "delay": null,
+                        "platform": null,
+                        "prognosis": {
+                          "platform": null,
+                          "arrival": null,
+                          "departure": null,
+                          "capacity1st": null,
+                          "capacity2nd": null
+                        },
+                        "realtimeAvailability": null,
+                        "location": {
+                          "id": "8768600",
+                          "name": "Paris Gare de Lyon",
+                          "score": null,
+                          "coordinate": {
+                            "type": "WGS84",
+                            "x": 48.844996,
+                            "y": 2.373901
+                          },
+                          "distance": null
+                        }
+                      }
+                    ],
+                    "capacity1st": null,
+                    "capacity2nd": null
+                  },
+                  "walk": null,
+                  "departure": {
+                    "station": {
+                      "id": "8718206",
+                      "name": "Mulhouse",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.741954,
+                        "y": 7.343059
+                      },
+                      "distance": null
+                    },
+                    "arrival": "2026-07-10T13:44:00+0200",
+                    "arrivalTimestamp": 1783683840,
+                    "departure": "2026-07-10T14:56:00+0200",
+                    "departureTimestamp": 1783688160,
+                    "delay": null,
+                    "platform": null,
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8718206",
+                      "name": "Mulhouse",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 47.741954,
+                        "y": 7.343059
+                      },
+                      "distance": null
+                    }
+                  },
+                  "arrival": {
+                    "station": {
+                      "id": "8768600",
+                      "name": "Paris Gare de Lyon",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 48.844996,
+                        "y": 2.373901
+                      },
+                      "distance": null
+                    },
+                    "arrival": "2026-07-10T17:38:00+0200",
+                    "arrivalTimestamp": 1783697880,
+                    "departure": null,
+                    "departureTimestamp": null,
+                    "delay": null,
+                    "platform": null,
+                    "prognosis": {
+                      "platform": null,
+                      "arrival": null,
+                      "departure": null,
+                      "capacity1st": null,
+                      "capacity2nd": null
+                    },
+                    "realtimeAvailability": null,
+                    "location": {
+                      "id": "8768600",
+                      "name": "Paris Gare de Lyon",
+                      "score": null,
+                      "coordinate": {
+                        "type": "WGS84",
+                        "x": 48.844996,
+                        "y": 2.373901
+                      },
+                      "distance": null
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
   auth: inherit
 
