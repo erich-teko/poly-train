@@ -89,6 +89,21 @@ router.get("/journeys", checkAuth, async (req, res) => {
   }
 });
 
-
+router.get("/journeys/:journeyId", checkAuth, async (req, res) => {
+  try {
+    const journeyId = req.params.journeyId;
+    const journey = await Journey.findById(journeyId);
+    if (!journey) {
+      return res.status(404).json({ error: "Journey not found" });
+    }
+    // Check if the authenticated user is the owner of the journey
+    if (journey.ownerId.toString() !== req.userData.userId) {
+      return res.status(403).json({ error: "Unauthorized to access this journey" });
+    }
+    res.status(200).json(journey);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve journey" });
+  }
+});
 
 export default router;
