@@ -2,6 +2,7 @@ import express from "express";
 import checkAuth from "../middleware/auth.js";
 import Journey from "../models/journeys.js";
 import User from "../models/User.js";
+import { getStations } from "../controllers/publicTransportAPI.js";
 
 const router = express.Router();
 
@@ -13,7 +14,8 @@ router.get("/profile", checkAuth, (req, res) => {
 
 router.post("/journeys", checkAuth, async (req, res) => {
   try {
-    const { startLocation, destinationLocation, startDate, endDate, stages } = req.body;
+    const { startLocation, destinationLocation, startDate, endDate, stages } =
+      req.body;
     console.log(startLocation);
     console.log(req.userData.userId);
     console.log(destinationLocation);
@@ -40,14 +42,17 @@ router.post("/journeys", checkAuth, async (req, res) => {
 router.put("/journeys/:journeyId", checkAuth, async (req, res) => {
   try {
     const journeyId = req.params.journeyId;
-    const { startLocation, destinationLocation, startDate, endDate, stages } = req.body;
+    const { startLocation, destinationLocation, startDate, endDate, stages } =
+      req.body;
     const journey = await Journey.findById(journeyId);
     if (!journey) {
       return res.status(404).json({ error: "Journey not found" });
     }
     // Check if the authenticated user is the owner of the journey
     if (journey.ownerId.toString() !== req.userData.userId) {
-      return res.status(403).json({ error: "Unauthorized to update this journey" });
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to update this journey" });
     }
     journey.startLocation = startLocation;
     journey.destinationLocation = destinationLocation;
@@ -70,7 +75,9 @@ router.delete("/journeys/:journeyId", checkAuth, async (req, res) => {
     }
     // Check if the authenticated user is the owner of the journey
     if (journey.ownerId.toString() !== req.userData.userId) {
-      return res.status(403).json({ error: "Unauthorized to delete this journey" });
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to delete this journey" });
     }
     await Journey.findByIdAndDelete(journeyId);
     res.status(200).json({ message: "Journey deleted successfully" });
@@ -98,9 +105,21 @@ router.get("/journeys/:journeyId", checkAuth, async (req, res) => {
     }
     // Check if the authenticated user is the owner of the journey
     if (journey.ownerId.toString() !== req.userData.userId) {
-      return res.status(403).json({ error: "Unauthorized to access this journey" });
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to access this journey" });
     }
     res.status(200).json(journey);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve journey" });
+  }
+});
+
+router.get("/public-transport/stations", checkAuth, async (req, res) => {
+  try {
+    const station = req.query.station;
+    const stations = await getStations(station);
+    res.status(200).json(stations);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve journey" });
   }

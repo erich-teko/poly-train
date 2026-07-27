@@ -1,0 +1,30 @@
+info:
+  name: public transport stations
+  type: http
+  seq: 11
+
+http:
+  method: GET
+  url: http://{{host}}:{{port}}/public-transport/stations?station=Stans
+  params:
+    - name: station
+      value: Stans
+      type: query
+  auth: inherit
+
+runtime:
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: ""
+        method: jsonq
+      variable:
+        name: ""
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
