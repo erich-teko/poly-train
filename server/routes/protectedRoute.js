@@ -2,7 +2,10 @@ import express from "express";
 import checkAuth from "../middleware/auth.js";
 import Journey from "../models/journeys.js";
 import User from "../models/User.js";
-import { getStations } from "../controllers/publicTransportAPI.js";
+import {
+  getStations,
+  getConnections,
+} from "../controllers/publicTransportAPI.js";
 
 const router = express.Router();
 
@@ -120,6 +123,26 @@ router.get("/public-transport/stations", checkAuth, async (req, res) => {
     const station = req.query.station;
     const stations = await getStations(station);
     res.status(200).json(stations);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve journey" });
+  }
+});
+
+router.get("/public-transport/connections", checkAuth, async (req, res) => {
+  try {
+    const startStation = req.query.startStation;
+    const endStation = req.query.endStation;
+    const travelDate = req.query.travelDate;
+    const travelTime = req.query.travelTime;
+    const isArrivalTime = req.query.isArrivalTime;
+    const connections = await getConnections(
+      startStation,
+      endStation,
+      travelDate,
+      travelTime,
+      isArrivalTime,
+    );
+    res.status(200).json(connections);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve journey" });
   }
