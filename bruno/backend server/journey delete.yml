@@ -1,0 +1,26 @@
+info:
+  name: journey delete
+  type: http
+  seq: 8
+
+http:
+  method: DELETE
+  url: http://{{host}}:{{port}}/journeys/6a4d54de404d0046460d4364
+  auth: inherit
+
+runtime:
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: ""
+        method: jsonq
+      variable:
+        name: ""
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
