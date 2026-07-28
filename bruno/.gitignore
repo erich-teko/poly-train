@@ -1,6 +1,9 @@
 # Secrets
 .env*
 
+# Local environment (contains session tokens)
+environments/
+
 # Dependencies
 node_modules
 
