@@ -15,8 +15,8 @@ runtime:
     - type: after-response
       code: |-
         // Save to a variable for use in later requests
-        bru.setVar("token", res.body.token);
-        bru.setVar("userId", res.body.userId);
+        bru.deleteEnvVar("token");
+        bru.deleteEnvVar("userId");
   actions:
     - type: set-variable
       phase: after-response
