@@ -113,7 +113,7 @@ router.get("/public-transport/stations", checkAuth, async (req, res) => {
     const stations = await getStations(station);
     res.status(200).json(stations);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve journey" });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -127,7 +127,7 @@ router.get("/public-transport/connections", checkAuth, async (req, res) => {
     const connections = await getConnections(startStation, endStation, travelDate, travelTime, isArrivalTime);
     res.status(200).json(connections);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve journey" });
+    res.status(500).json({ error: error.message });
   }
 });
 
