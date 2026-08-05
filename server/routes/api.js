@@ -68,7 +68,7 @@ router.delete("/journeys/:journeyId", checkAuth, async (req, res) => {
       return res.status(403).json({ error: "Unauthorized to delete this journey" });
     }
     await Journey.findByIdAndDelete(journeyId);
-    res.status(200).json({ message: "Journey deleted successfully" });
+    res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: "Failed to delete journey" });
   }
