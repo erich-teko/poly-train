@@ -1,11 +1,11 @@
 info:
   name: journey save
   type: http
-  seq: 6
+  seq: 3
 
 http:
   method: POST
-  url: http://{{host}}:{{port}}/journeys
+  url: http://{{host}}:{{port}}/api/journeys
   body:
     type: json
     data: |-

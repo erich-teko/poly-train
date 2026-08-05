@@ -1,24 +1,22 @@
 info:
-  name: journey update
+  name: user logout
   type: http
-  seq: 7
+  seq: 2
 
 http:
-  method: PUT
-  url: http://{{host}}:{{port}}/journeys/6a4d52b08b128b8673fed451
+  method: POST
+  url: http://{{host}}:{{port}}/auth/logout
   body:
     type: json
-    data: |-
-      {
-        "startLocation": "Luzern",
-        "destinationLocation": "Hamburg",
-        "startDate": "2026-07-10",
-        "endDate": "2026-07-16",
-        "stages": []
-      }
-  auth: inherit
+    data: ""
 
 runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        // Save to a variable for use in later requests
+        bru.deleteEnvVar("token");
+        bru.deleteEnvVar("userId");
   actions:
     - type: set-variable
       phase: after-response

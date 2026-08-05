@@ -12,7 +12,7 @@ const port = Number(process.env.PORT || 3000);
 
 app.use(express.json());
 app.use("/auth", authRoutes);
-app.use("", apiRoutes);
+app.use("/api", apiRoutes);
 
 mongoose
   .connect(encodeURI(process.env.MONGODB_URI))
