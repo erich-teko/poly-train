@@ -6,12 +6,6 @@ import { getStations, getConnections } from "../controllers/publicTransportAPI.j
 
 const router = express.Router();
 
-// A protected route is define here
-router.get("/profile", checkAuth, (req, res) => {
-  // Access user data through req.userData
-  res.json({ message: "You are authenticated" });
-});
-
 router.post("/journeys", checkAuth, async (req, res) => {
   try {
     const { startLocation, destinationLocation, startDate, endDate, stages } = req.body;
