@@ -6,12 +6,6 @@ import { getStations, getConnections } from "../controllers/publicTransportAPI.j
 
 const router = express.Router();
 
-// A protected route is define here
-router.get("/profile", checkAuth, (req, res) => {
-  // Access user data through req.userData
-  res.json({ message: "You are authenticated" });
-});
-
 router.post("/journeys", checkAuth, async (req, res) => {
   try {
     const { startLocation, destinationLocation, startDate, endDate, stages } = req.body;
@@ -74,7 +68,7 @@ router.delete("/journeys/:journeyId", checkAuth, async (req, res) => {
       return res.status(403).json({ error: "Unauthorized to delete this journey" });
     }
     await Journey.findByIdAndDelete(journeyId);
-    res.status(200).json({ message: "Journey deleted successfully" });
+    res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: "Failed to delete journey" });
   }

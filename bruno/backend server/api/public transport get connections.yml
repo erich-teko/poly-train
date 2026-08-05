@@ -1,11 +1,11 @@
 info:
   name: public transport connections
   type: http
-  seq: 12
+  seq: 6
 
 http:
   method: GET
-  url: http://{{host}}:{{port}}/public-transport/connections?startStation=Luzern&endStation=Stans&travelDate=2026-07-30&travelTime=08:00&isArrivalTime=1
+  url: http://{{host}}:{{port}}/api/public-transport/connections?startStation=Luzern&endStation=Stans&travelDate=2026-07-30&travelTime=08:00&isArrivalTime=1
   params:
     - name: startStation
       value: Luzern

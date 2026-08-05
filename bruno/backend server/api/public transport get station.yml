@@ -1,11 +1,15 @@
 info:
-  name: journey delete
+  name: public transport stations
   type: http
-  seq: 8
+  seq: 7
 
 http:
-  method: DELETE
-  url: http://{{host}}:{{port}}/journeys/6a4d54de404d0046460d4364
+  method: GET
+  url: http://{{host}}:{{port}}/api/public-transport/stations?station=Stans
+  params:
+    - name: station
+      value: Stans
+      type: query
   auth: inherit
 
 runtime:
