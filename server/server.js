@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
 import authRoutes from "./routes/auth.js";
-import protectedRoute from "./routes/protectedRoute.js";
+import apiRoutes from "./routes/api.js";
 
 import dns from "node:dns/promises";
 dns.setServers(["1.1.1.1", "1.0.0.1"]);
@@ -12,7 +12,7 @@ const port = Number(process.env.PORT || 3000);
 
 app.use(express.json());
 app.use("/auth", authRoutes);
-app.use("", protectedRoute);
+app.use("", apiRoutes);
 
 mongoose
   .connect(encodeURI(process.env.MONGODB_URI))
