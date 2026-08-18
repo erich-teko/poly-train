@@ -19,6 +19,28 @@
 					"dev"
 				],
 				"console": "integratedTerminal"
+			},
+			{
+				"name": "Launch Client (npm dev)",
+				"type": "node",
+				"request": "launch",
+				"cwd": "${workspaceFolder}/client",
+				"runtimeExecutable": "npm",
+				"runtimeArgs": [
+					"run",
+					"dev"
+				],
+				"console": "integratedTerminal"
+			}
+		],
+		"compounds": [
+			{
+				"name": "Launch Full Stack",
+				"configurations": [
+					"Launch Server (npm dev)",
+					"Launch Client (npm dev)"
+				],
+				"stopAll": true
 			}
 		]
 	}
