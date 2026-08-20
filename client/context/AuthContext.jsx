@@ -28,8 +28,42 @@ export function AuthProvider({ children }) {
     }
   }
 
+  const logout = async () => {
+    try {
+      const response = await fetch("/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: null,
+      })
+
+      if (!response.ok) throw new Error("Logout fehlgeschlagen!")
+
+      setToken(null);
+      setUserId(null);
+      localStorage.clear();
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const signUp = async ({ username, email, password }) => {
+    try {
+      const response = await fetch("/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: { username, email, password },
+      })
+
+      if (!response.ok) throw new Error("Registrierung ist fehlgeschlagen!")
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ token, userId, login }}>
+    <AuthContext.Provider
+      value={{ token, isLoggedin: !!token, userId, login, logout, signUp }}
+    >
       {children}
     </AuthContext.Provider>
   )
