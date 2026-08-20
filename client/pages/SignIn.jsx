@@ -1,8 +1,9 @@
+import LoginForm from "@/components/LoginForm"
+
 function SignIn() {
   return (
-    <div>
-      <h1>Sign In Page</h1>
-      {/* Add your sign-in form or components here */}
+    <div className="flex min-h-svh items-center justify-center p-6">
+      <LoginForm />
     </div>
   )
 }
