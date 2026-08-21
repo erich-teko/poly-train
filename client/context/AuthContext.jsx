@@ -19,12 +19,14 @@ export function AuthProvider({ children }) {
       if (!response.ok) throw new Error("Login fehlgeschlagen!")
 
       const data = await response.json()
+      console.log("Login erfolgreich:", data)
       setToken(data.token)
       setUserId(data.userId)
       localStorage.setItem("token", data.token)
       localStorage.setItem("userId", data.userId)
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 
@@ -46,12 +48,12 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const signUp = async ({ username, email, password }) => {
+  const register = async ({ username, email, password }) => {
     try {
       const response = await fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: { username, email, password },
+        body: JSON.stringify({ username, email, password }),
       })
 
       if (!response.ok) throw new Error("Registrierung ist fehlgeschlagen!")
@@ -62,7 +64,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ token, isLoggedin: !!token, userId, login, logout, signUp }}
+      value={{ token, isLoggedIn: !!token, userId, login, logout, register }}
     >
       {children}
     </AuthContext.Provider>

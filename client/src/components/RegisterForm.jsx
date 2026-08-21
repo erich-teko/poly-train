@@ -1,6 +1,5 @@
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -11,23 +10,24 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
-
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "/context/AuthContext"
+import { useState } from "react"
 
-function LoginForm() {
-  const { login } = useAuth()
+function RegisterForm() {
+  const { register } = useAuth()
   const navigate = useNavigate()
+  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      await login(email, password)
-      navigate("/")
-      console.log("Login erfolgreich")
+      await register({ username, email, password })
+      navigate("/login")
+      console.log("Registrierung erfolgreich")
     } catch (error) {
       console.error(error)
     }
@@ -38,12 +38,23 @@ function LoginForm() {
       <CardHeader>
         <CardTitle>Willkommen bei Poly-Train</CardTitle>
         <CardDescription>
-          Melde dich an, um deine Reise zu planen!
+          Registriere dich, und deine Reise kann beginnen!
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form id="login-form" onSubmit={handleSubmit}>
+        <form id="register-form" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="username">Benutzername</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Max Mustermann"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                required
+              />
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -65,16 +76,26 @@ function LoginForm() {
                 required
               />
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="confirm-password">Passwort bestätigen</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                required
+              />
+            </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" form="login-form" className="w-full">
-          Login
+        <Button type="submit" form="register-form" className="w-full">
+          Registrieren
         </Button>
       </CardFooter>
     </Card>
   )
 }
 
-export default LoginForm
+export default RegisterForm

@@ -1,15 +1,27 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { AuthProvider } from "../context/AuthContext"
 import Dashboard from "../pages/Dashboard"
-import SignIn from "../pages/SignIn"
+import Auth from "../pages/Auth"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 export function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<SignIn />} />
-        <Route path="/" element={<Dashboard />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Auth formType="login" />} />
+          <Route path="/register" element={<Auth formType="register" />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
