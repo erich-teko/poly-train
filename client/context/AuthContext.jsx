@@ -5,6 +5,8 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"))
   const [userId, setUserId] = useState(() => localStorage.getItem("userId"))
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"))
+  const [username, setUsername] = useState(() => localStorage.getItem("username"))
 
   const login = async (email, password) => {
     try {
@@ -16,14 +18,16 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ email, password }),
       })
 
-      if (!response.ok) throw new Error("Login fehlgeschlagen!")
+      if (!response.ok) throw new Error("Anmeldung fehlgeschlagen! Bitte überprüfe deine Eingaben.")
 
       const data = await response.json()
-      console.log("Login erfolgreich:", data)
       setToken(data.token)
       setUserId(data.userId)
+      setUsername(data.username)
+      setIsLoggedIn(!!data.token);
       localStorage.setItem("token", data.token)
       localStorage.setItem("userId", data.userId)
+      localStorage.setItem("username", data.username)
     } catch (error) {
       console.error(error)
       throw error
@@ -38,10 +42,12 @@ export function AuthProvider({ children }) {
         body: null,
       })
 
-      if (!response.ok) throw new Error("Logout fehlgeschlagen!")
+      if (!response.ok) throw new Error("Abmeldung fehlgeschlagen! Bitte versuche es erneut.")
 
       setToken(null);
       setUserId(null);
+      setUsername(null);
+      setIsLoggedIn(false);
       localStorage.clear();
     } catch (error) {
       console.error(error)
@@ -64,7 +70,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ token, isLoggedIn: !!token, userId, login, logout, register }}
+      value={{ token, isLoggedIn, userId, username, login, logout, register }}
     >
       {children}
     </AuthContext.Provider>

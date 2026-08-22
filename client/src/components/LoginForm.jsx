@@ -1,6 +1,5 @@
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -13,10 +12,11 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 
+import { toast } from "@/components/ui/toast"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "/context/AuthContext"
 
-function LoginForm() {
+function LoginForm({ projectName }) {
   const { login } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
@@ -27,16 +27,19 @@ function LoginForm() {
     try {
       await login(email, password)
       navigate("/")
-      console.log("Login erfolgreich")
     } catch (error) {
-      console.error(error)
+      toast.add({
+        title: "Anmeldung fehlgeschlagen",
+        description: error?.message ?? "E-Mail oder Passwort ist falsch.",
+        type: "error",
+      })
     }
   }
 
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Willkommen bei Poly-Train</CardTitle>
+        <CardTitle>Willkommen bei {projectName}</CardTitle>
         <CardDescription>
           Melde dich an, um deine Reise zu planen!
         </CardDescription>

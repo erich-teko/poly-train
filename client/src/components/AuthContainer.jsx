@@ -2,29 +2,27 @@ import LoginForm from "@/components/LoginForm"
 import RegisterForm from "@/components/RegisterForm"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
-function FormContainer({ formType = "login" }) {
+function AuthContainer({ projectName, formType = "login" }) {
+  const navigate = useNavigate()
+
   return (
     <Card className="mx-auto w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Poly-Train</CardTitle>
+        <CardTitle>{projectName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue={formType} className="w-full">
+        <Tabs value={formType} onValueChange={(value) => navigate(`/${value}`)} className="w-full">
           <TabsList>
-            <TabsTrigger value="login" asChild>
-              <Link to="/login">Anmelden</Link>
-            </TabsTrigger>
-            <TabsTrigger value="register" asChild>
-              <Link to="/register">Konto erstellen</Link>
-            </TabsTrigger>
+            <TabsTrigger value="login">Anmelden</TabsTrigger>
+            <TabsTrigger value="register">Konto erstellen</TabsTrigger>
           </TabsList>
           <TabsContent value="login">
-            <LoginForm />
+            <LoginForm projectName={projectName} />
           </TabsContent>
           <TabsContent value="register">
-            <RegisterForm />
+            <RegisterForm projectName={projectName} />
           </TabsContent>
         </Tabs>
       </CardContent>
@@ -32,4 +30,4 @@ function FormContainer({ formType = "login" }) {
   )
 }
 
-export default FormContainer
+export default AuthContainer

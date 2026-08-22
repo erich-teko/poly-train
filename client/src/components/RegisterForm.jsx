@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "/context/AuthContext"
 import { useState } from "react"
 
-function RegisterForm() {
+function RegisterForm({projectName}) {
   const { register } = useAuth()
   const navigate = useNavigate()
   const [username, setUsername] = useState("")
@@ -36,7 +36,7 @@ function RegisterForm() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Willkommen bei Poly-Train</CardTitle>
+        <CardTitle>Willkommen bei {projectName}</CardTitle>
         <CardDescription>
           Registriere dich, und deine Reise kann beginnen!
         </CardDescription>

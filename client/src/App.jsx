@@ -3,10 +3,14 @@ import { AuthProvider } from "../context/AuthContext"
 import Dashboard from "../pages/Dashboard"
 import Auth from "../pages/Auth"
 import ProtectedRoute from "./components/ProtectedRoute"
+import { Toaster } from "@/components/ui/toast"
 
 export function App() {
+  const projectName = "Poly-Train"
+
   return (
     <AuthProvider>
+      <Toaster />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Auth formType="login" />} />
@@ -15,7 +19,7 @@ export function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Dashboard projectName={projectName} />
               </ProtectedRoute>
             }
           />
