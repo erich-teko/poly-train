@@ -10,26 +10,52 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 import { Button } from "@/components/ui/button"
+import { toast } from "@/components/ui/toast"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "/context/AuthContext"
-import { useState } from "react"
 
-function RegisterForm({projectName}) {
+const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+
+function RegisterForm({ projectName }) {
   const { register } = useAuth()
   const navigate = useNavigate()
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [passwordError, setPasswordError] = useState(null)
+
+  useEffect(() => {
+    if (!password && !confirmPassword) {
+      setPasswordError(null)
+      return
+    }
+    if (!PASSWORD_REGEX.test(password)) {
+      setPasswordError(
+        "Passwort muss mindestens 8 Zeichen lang sein und mindestens einen Grossbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten."
+      )
+      return
+    }
+    if (password !== confirmPassword) {
+      setPasswordError("Passwörter stimmen nicht überein")
+      return
+    }
+    setPasswordError(null)
+  }, [password, confirmPassword])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
       await register({ username, email, password })
       navigate("/login")
-      console.log("Registrierung erfolgreich")
     } catch (error) {
-      console.error(error)
+      toast.add({
+        title: "Registrierung fehlgeschlagen",
+        description: error?.message ?? "Bitte überprüfe deine Eingaben.",
+        type: "error",
+      })
     }
   }
 
@@ -86,11 +112,19 @@ function RegisterForm({projectName}) {
                 required
               />
             </div>
+            {passwordError && (
+              <p className="text-sm text-destructive">{passwordError}</p>
+            )}
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" form="register-form" className="w-full">
+        <Button
+          disabled={!!passwordError || !password}
+          type="submit"
+          form="register-form"
+          className="w-full"
+        >
           Registrieren
         </Button>
       </CardFooter>

@@ -62,9 +62,10 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ username, email, password }),
       })
 
-      if (!response.ok) throw new Error("Registrierung ist fehlgeschlagen!")
+      if (!response.ok) throw new Error("Registrierung ist fehlgeschlagen! Bitte überprüfe deine Eingaben.")
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 
