@@ -3,6 +3,7 @@ import Footer from "../src/components/Footer"
 import Header from "../src/components/Header"
 import { Button } from "../src/components/ui/button"
 import { useNavigate } from "react-router-dom"
+import { ArrowLeft } from "lucide-react"
 
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
@@ -22,6 +23,7 @@ function JourneyPlanner({ projectName }) {
               <p>Deine Reise startet hier mit deiner Planung.</p>
             </div>
             <Button onClick={handleBackToDashboard}>
+              <ArrowLeft />
               Zurück zum Dashboard
             </Button>
           </div>
