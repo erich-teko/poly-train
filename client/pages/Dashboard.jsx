@@ -10,7 +10,7 @@ function Dashboard({ projectName }) {
         <div className="flex w-full flex-col gap-4 text-sm leading-loose">
           <div>
             <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p>Welcome to the Poly-Train dashboard!</p>
+            <p>Hier findest du alle deine Reisen auf einen Blick.d</p>
           </div>
           <div className="font-mono text-xs text-muted-foreground">
             (Press <kbd>d</kbd> to toggle dark mode)
