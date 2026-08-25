@@ -11,12 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar as DicebearAvatar, Style } from "@dicebear/core"
-import pixelbot from "@dicebear/styles/pixelbot.json" with { type: "json" }
+import identicon from "@dicebear/styles/identicon.json" with { type: "json" }
 import { useAuth } from "/context/AuthContext"
 
 function UserProfile() {
   const { username, logout } = useAuth()
-  const style = new Style(pixelbot)
+  const style = new Style(identicon)
   const avatar = new DicebearAvatar(style, {
     seed: username ?? "John",
     // ... other options
