@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "/context/AuthContext"
 
 const PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
 
 function RegisterForm({ projectName }) {
   const { register } = useAuth()
