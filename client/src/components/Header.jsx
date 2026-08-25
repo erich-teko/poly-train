@@ -1,3 +1,4 @@
+import ThemeToggle from "./ThemeToggle"
 import UserProfile from "./UserProfile"
 
 function Header({ projectName }) {
@@ -7,7 +8,10 @@ function Header({ projectName }) {
         <div>
           <h1>{projectName}</h1>
         </div>
-        <UserProfile />
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <UserProfile />
+        </div>
       </div>
     </header>
   )
