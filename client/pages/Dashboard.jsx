@@ -23,7 +23,7 @@ function Dashboard({ projectName }) {
           <div className="flex w-full items-start justify-between">
             <div>
               <h1 className="text-2xl font-bold">Dashboard</h1>
-              <p>Hier findest du alle deine Reisen auf einen Blick.d</p>
+              <p>Hier findest du alle deine Reisen auf einen Blick.</p>
             </div>
             <Button onClick={handleNewJourney}>
               <Plus />
