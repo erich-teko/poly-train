@@ -1,20 +1,9 @@
-import { Plus } from "lucide-react"
-import { Button } from "../src//components/ui/button"
 import Footer from "../src/components/Footer"
 import Header from "../src/components/Header"
+import { JourneyDialog } from "../src/components/JourneyDialog"
 import Journeys from "../src/components/Journeys"
-import { toast } from "../src/components/ui/toast"
 
 function Dashboard({ projectName }) {
-  const handleNewJourney = () => {
-    toast.add({
-      title: "Neue Reise",
-      description:
-        "Hier kommt bald die Funktion zum Erstellen einer neuen Reise.",
-      type: "info",
-    })
-  }
-
   return (
     <>
       <Header projectName={projectName} />
@@ -25,10 +14,7 @@ function Dashboard({ projectName }) {
               <h1 className="text-2xl font-bold">Dashboard</h1>
               <p>Hier findest du alle deine Reisen auf einen Blick.</p>
             </div>
-            <Button onClick={handleNewJourney}>
-              <Plus />
-              Neue Reise erstellen
-            </Button>
+            <JourneyDialog />
           </div>
           <div className="flex flex-col gap-2">
             <Journeys />
