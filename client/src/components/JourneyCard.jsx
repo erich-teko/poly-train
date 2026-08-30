@@ -1,17 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Map } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { formatDate } from "@/utils/dateUtils"
+import { getClientLocale } from "@/utils/localeUtils"
 
 function JourneyCard({ journey }) {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("de-CH", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    })
-  }
-
+  const locale = getClientLocale()
   const stagesCount = journey.stages.length
   const navigate = useNavigate()
   const onClick = () => {
@@ -20,7 +14,7 @@ function JourneyCard({ journey }) {
 
   return (
     <Card
-      className="flex flex-col overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:border-primary/50 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="flex cursor-pointer flex-col overflow-hidden transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -40,9 +34,9 @@ function JourneyCard({ journey }) {
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          {formatDate(journey.startDate)} - {formatDate(journey.endDate)}
+          {formatDate(locale, journey.startDate)} - {formatDate(locale, journey.endDate)}
           <br />
-            {stagesCount === 0 ? "Keine Etappen" : `${stagesCount} Etappen`}
+          {stagesCount === 0 ? "Keine Etappen" : `${stagesCount} Etappen`}
         </p>
       </CardContent>
     </Card>
