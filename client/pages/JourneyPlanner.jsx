@@ -4,6 +4,7 @@ import Header from "../src/components/Header"
 import { Button } from "../src/components/ui/button"
 import { useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
+import ConnectionSearch from "../src/components/ConnectionSearch"
 
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
@@ -28,6 +29,7 @@ function JourneyPlanner({ projectName }) {
             </Button>
           </div>
           <p>Journey ID: {journeyId}</p>
+          <ConnectionSearch />
           {/* Add your journey planning content here */}
         </div>
       </div>
