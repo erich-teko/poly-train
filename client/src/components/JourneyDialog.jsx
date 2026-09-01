@@ -19,39 +19,8 @@ import { Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 import useSWR, { useSWRConfig } from "swr"
 import useSWRMutation from "swr/mutation"
+import { fetcher, mutationFetcher } from "@/utils/fetcher"
 import { useAuth } from "/context/AuthContext"
-
-const fetchJourney = async ([url, token]) => {
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error("Die Reise konnte nicht geladen werden.")
-  }
-
-  return response.json()
-}
-
-const saveJourney = async ([url, token], { arg }) => {
-  const response = await fetch(url, {
-    method: arg.method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(arg.journeyData),
-  })
-
-  if (!response.ok) {
-    const data = await response.json().catch(() => null)
-    throw new Error(data?.error || "Die Reise konnte nicht gespeichert werden.")
-  }
-
-  return response.json()
-}
 
 export function JourneyDialog({ open, setOpen, journeyId }) {
   const { token } = useAuth()
@@ -65,11 +34,11 @@ export function JourneyDialog({ open, setOpen, journeyId }) {
   const journeyUrl = journeyId ? `/api/journeys/${journeyId}` : "/api/journeys"
   const { data: journey } = useSWR(
     journeyId && token ? [journeyUrl, token] : null,
-    fetchJourney
+    fetcher
   )
   const { trigger: save, isMutating } = useSWRMutation(
     token ? [journeyUrl, token] : null,
-    saveJourney
+    mutationFetcher
   )
 
   const handleSubmit = async (event) => {
@@ -83,12 +52,13 @@ export function JourneyDialog({ open, setOpen, journeyId }) {
       destinationLocation,
       startDate: datePeriod?.from || null,
       endDate: datePeriod?.to || datePeriod?.from || null,
+      stages: journey?.stages || [],
     }
 
     try {
       await save({
         method: journeyId ? "PUT" : "POST",
-        journeyData,
+        body: journeyData,
       })
 
       await mutate(["/api/journeys", token])

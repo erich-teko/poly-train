@@ -16,20 +16,8 @@ import { useNavigate } from "react-router-dom"
 import { useSWRConfig } from "swr"
 import useSWRMutation from "swr/mutation"
 import { useAuth } from "../../context/AuthContext"
+import { mutationFetcher } from "../utils/fetcher"
 import { JourneyDialog } from "./JourneyDialog"
-
-async function deleteJourney([url, token]) {
-  const response = await fetch(url, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error("Die Reise konnte nicht gelöscht werden.")
-  }
-}
 
 function JourneyCard({ journey }) {
   const { token } = useAuth()
@@ -37,7 +25,7 @@ function JourneyCard({ journey }) {
   const [editOpen, setEditOpen] = useState(false)
   const { trigger: remove, isMutating } = useSWRMutation(
     token ? [`/api/journeys/${journey._id}`, token] : null,
-    deleteJourney
+    mutationFetcher
   )
   const locale = getClientLocale()
   const stagesCount = journey.stages.length
@@ -54,7 +42,7 @@ function JourneyCard({ journey }) {
   const handleDelete = async (e) => {
     e.stopPropagation()
     try {
-      await remove()
+      await remove({ method: "DELETE" })
       await mutate(["/api/journeys", token])
       toast.add({
         title: "Reise gelöscht",

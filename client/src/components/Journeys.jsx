@@ -1,28 +1,16 @@
+import { fetcher } from "../utils/fetcher"
+import SkeletonCard from "./SkeletonCard"
 import JourneyCard from "./JourneyCard"
 import { useAuth } from "/context/AuthContext"
 import useSWR from "swr"
 
-const fetchJourneys = async ([url, token]) => {
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error("Reisen konnten nicht geladen werden.")
-  }
-
-  const data = await response.json()
-  return Array.isArray(data) ? data : []
-}
-
 function Journeys() {
   const { token } = useAuth()
-  const { data = [], error, isLoading } = useSWR(
-    token ? ["/api/journeys", token] : null,
-    fetchJourneys
-  )
+  const {
+    data = [],
+    error,
+    isLoading,
+  } = useSWR(token ? ["/api/journeys", token] : null, fetcher)
   const journeys = data.toSorted((a, b) => {
     const startDateDiff = new Date(b.startDate) - new Date(a.startDate)
     return startDateDiff !== 0
@@ -33,7 +21,14 @@ function Journeys() {
   return (
     <div className="w-full space-y-6">
       {isLoading ? (
-        <p className="text-muted-foreground">Reisen werden geladen...</p>
+        <>
+          <p className="text-muted-foreground">Lade Reisen...</p>
+          <div className="grid w-full gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        </>
       ) : error ? (
         <p className="text-destructive">{error.message}</p>
       ) : journeys.length === 0 ? (
