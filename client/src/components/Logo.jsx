@@ -1,7 +1,7 @@
 function Logo({ size, className }) {
   return (
     <img
-      src="../../public/poly-train.svg"
+      src="/poly-train.svg"
       alt="Project Logo"
       width={size}
       height={size}
