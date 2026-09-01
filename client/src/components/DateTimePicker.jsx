@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/popover"
 import { useState } from "react"
 
-function DateTimePicker() {
+function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
   const [open, setOpen] = useState(false)
-  const [date, setDate] = useState()
+  const selectedDate = date ?? new Date()
 
   return (
     <FieldGroup className="mx-auto max-w-xs flex-row">
@@ -30,7 +30,7 @@ function DateTimePicker() {
                 id="date-picker-optional"
                 className="w-32 justify-between font-normal"
               >
-                {date ? format(date, "PPP") : "Select date"}
+                {selectedDate ? format(selectedDate, "PPP") : "Select date"}
                 <ChevronDownIcon data-icon="inline-end" />
               </Button>
             }
@@ -38,11 +38,11 @@ function DateTimePicker() {
           <PopoverContent className="w-auto overflow-hidden p-0" align="start">
             <Calendar
               mode="single"
-              selected={date}
+              selected={selectedDate}
               captionLayout="dropdown"
-              defaultMonth={date}
-              onSelect={(date) => {
-                setDate(date)
+              defaultMonth={selectedDate}
+              onSelect={(selected) => {
+                onDateChange?.(selected)
                 setOpen(false)
               }}
             />
@@ -55,7 +55,8 @@ function DateTimePicker() {
           type="time"
           id="time-picker-optional"
           step="60"
-          defaultValue="10:30"
+          value={time ?? "10:30"}
+          onChange={(event) => onTimeChange?.(event.target.value)}
           className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
       </Field>
