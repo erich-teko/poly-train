@@ -118,19 +118,25 @@ export function JourneyDialog({ open, setOpen, journeyId }) {
 
   return (
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger
-        render={
-          <Button>
-            <Plus /> Neue Reise erstellen
-          </Button>
-        }
-      />
+      {!journeyId && (
+        <DialogTrigger
+          render={
+            <Button>
+              <Plus /> Neue Reise erstellen
+            </Button>
+          }
+        />
+      )}
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleSubmit} className="contents">
           <DialogHeader>
-            <DialogTitle>Neue Reise erstellen</DialogTitle>
+            <DialogTitle>
+              {journeyId ? "Reise bearbeiten" : "Neue Reise erstellen"}
+            </DialogTitle>
             <DialogDescription>
-              Das ist der Anfang deiner Reise.
+              {journeyId
+                ? "Passe die Daten deiner Reise an."
+                : "Das ist der Anfang deiner Reise."}
             </DialogDescription>
           </DialogHeader>
           <FieldGroup>
