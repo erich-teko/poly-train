@@ -1,51 +1,42 @@
-import { useEffect, useState } from "react"
 import JourneyCard from "./JourneyCard"
 import { useAuth } from "/context/AuthContext"
+import useSWR from "swr"
+
+const fetchJourneys = async ([url, token]) => {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error("Reisen konnten nicht geladen werden.")
+  }
+
+  const data = await response.json()
+  return Array.isArray(data) ? data : []
+}
 
 function Journeys() {
   const { token } = useAuth()
-  const [journeys, setJourneys] = useState([])
-
-  useEffect(() => {
-    const fetchJourneys = async () => {
-      try {
-        const response = await fetch("/api/journeys", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        if (!response.ok) {
-          console.error(
-            "Error fetching journeys:",
-            response.status,
-            response.statusText
-          )
-          setJourneys([])
-          return
-        }
-
-        const data = await response.json()
-        const journeysArray = Array.isArray(data) ? data : []
-
-        setJourneys(
-          journeysArray.toSorted((a, b) => {
-            const startDateDiff = new Date(b.startDate) - new Date(a.startDate)
-            return startDateDiff !== 0
-              ? startDateDiff
-              : new Date(b.endDate) - new Date(a.endDate)
-          })
-        )
-      } catch (error) {
-        setJourneys([])
-      }
-    }
-    fetchJourneys()
-  }, [])
+  const { data = [], error, isLoading } = useSWR(
+    token ? ["/api/journeys", token] : null,
+    fetchJourneys
+  )
+  const journeys = data.toSorted((a, b) => {
+    const startDateDiff = new Date(b.startDate) - new Date(a.startDate)
+    return startDateDiff !== 0
+      ? startDateDiff
+      : new Date(b.endDate) - new Date(a.endDate)
+  })
 
   return (
     <div className="w-full space-y-6">
-      {journeys.length === 0 ? (
+      {isLoading ? (
+        <p className="text-muted-foreground">Reisen werden geladen...</p>
+      ) : error ? (
+        <p className="text-destructive">{error.message}</p>
+      ) : journeys.length === 0 ? (
         <p className="text-muted-foreground">Keine Reisen gefunden.</p>
       ) : (
         <p className="text-muted-foreground">Deine Reisen:</p>

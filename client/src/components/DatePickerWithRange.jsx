@@ -40,6 +40,7 @@ export function DatePickerWithRange({ title, datePeriod, setDatePeriod, numberOf
         <PopoverTrigger
           render={
             <Button
+              type="button"
               variant="outline"
               id="date-picker-range"
               className="justify-start px-2.5 font-normal"
@@ -71,6 +72,7 @@ export function DatePickerWithRange({ title, datePeriod, setDatePeriod, numberOf
           />
           <div className="flex justify-end border-t border-border p-2">
             <Button
+              type="button"
               size="sm"
               onClick={handleApply}
               disabled={!pendingDate?.from}
