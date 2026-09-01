@@ -84,7 +84,7 @@ function ConnectionSearch({ onConnectionsFound }) {
   }
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Verbindung Suchen</CardTitle>
         <CardDescription>

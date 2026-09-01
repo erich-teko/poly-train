@@ -70,7 +70,7 @@ function StageCard({
   }
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full">
       <CardHeader className={config.layout === "note" ? "bg-yellow-50 dark:bg-yellow-900" : ""}>
         <CardTitle className="flex items-center gap-2">
           {config.icon}

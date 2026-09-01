@@ -6,7 +6,7 @@ import { formatDuration } from "../utils/durationUtils"
 function ConnectionSelectionList({ connections = [] }) {
   if (connections.length === 0) {
     return (
-      <Card className="w-full max-w-sm">
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Verbindung wählen</CardTitle>
         </CardHeader>
@@ -20,7 +20,7 @@ function ConnectionSelectionList({ connections = [] }) {
   }
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Verbindung wählen</CardTitle>
       </CardHeader>
