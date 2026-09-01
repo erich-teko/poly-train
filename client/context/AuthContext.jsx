@@ -1,4 +1,6 @@
 import { createContext, useState, useContext } from "react"
+import useSWRMutation from "swr/mutation"
+import { mutationFetcher } from "../src/utils/fetcher"
 
 const AuthContext = createContext(null)
 
@@ -7,20 +9,14 @@ export function AuthProvider({ children }) {
   const [userId, setUserId] = useState(() => localStorage.getItem("userId"))
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"))
   const [username, setUsername] = useState(() => localStorage.getItem("username"))
+  const { trigger: triggerLogin } = useSWRMutation(["/auth/login", null], mutationFetcher)
+  const { trigger: triggerLogout } = useSWRMutation(["/auth/logout", null], mutationFetcher)
+  const { trigger: triggerRegister } = useSWRMutation(["/auth/register", null], mutationFetcher)
 
   const login = async (email, password) => {
     try {
-      const response = await fetch("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
+      const data = await triggerLogin({ body: { email, password } })
 
-      if (!response.ok) throw new Error("Anmeldung fehlgeschlagen! Bitte überprüfe deine Eingaben.")
-
-      const data = await response.json()
       setToken(data.token)
       setUserId(data.userId)
       setUsername(data.username)
@@ -30,19 +26,13 @@ export function AuthProvider({ children }) {
       localStorage.setItem("username", data.username)
     } catch (error) {
       console.error(error)
-      throw error
+      throw new Error("Anmeldung fehlgeschlagen! Bitte überprüfe deine Eingaben.")
     }
   }
 
   const logout = async () => {
     try {
-      const response = await fetch("/auth/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: null,
-      })
-
-      if (!response.ok) throw new Error("Abmeldung fehlgeschlagen! Bitte versuche es erneut.")
+      await triggerLogout()
 
       setToken(null);
       setUserId(null);
@@ -56,16 +46,10 @@ export function AuthProvider({ children }) {
 
   const register = async ({ username, email, password }) => {
     try {
-      const response = await fetch("/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-      })
-
-      if (!response.ok) throw new Error("Registrierung ist fehlgeschlagen! Bitte überprüfe deine Eingaben.")
+      await triggerRegister({ body: { username, email, password } })
     } catch (error) {
       console.error(error)
-      throw error
+      throw new Error("Registrierung ist fehlgeschlagen! Bitte überprüfe deine Eingaben.")
     }
   }
 
