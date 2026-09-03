@@ -1,12 +1,12 @@
-import { useParams } from "react-router-dom"
-import Footer from "../src/components/Footer"
-import Header from "../src/components/Header"
-import { Button } from "../src/components/ui/button"
-import { useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
 import { useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import ConnectionSearch from "../src/components/ConnectionSearch"
 import ConnectionSelectionList from "../src/components/ConnectionSelectionList"
+import Footer from "../src/components/Footer"
+import Header from "../src/components/Header"
+import StageList from "../src/components/StageList"
+import { Button } from "../src/components/ui/button"
 
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
@@ -33,9 +33,15 @@ function JourneyPlanner({ projectName }) {
             </Button>
           </div>
           <p>Journey ID: {journeyId}</p>
-          <ConnectionSearch onConnectionsFound={setConnections} />
-          <ConnectionSelectionList connections={connections} />
-          {/* Add your journey planning content here */}
+          <div className="grid gap-4 lg:grid-cols-3">
+            <div className="flex flex-col gap-4 lg:col-span-1">
+              <ConnectionSearch onConnectionsFound={setConnections} />
+              <ConnectionSelectionList connections={connections} />
+            </div>
+            <div className="flex flex-col gap-4 lg:col-span-2">
+            <StageList />
+            </div>
+          </div>
         </div>
       </div>
       <Footer year={new Date().getFullYear()} projectName={projectName} />
