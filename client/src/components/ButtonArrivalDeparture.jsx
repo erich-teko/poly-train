@@ -29,8 +29,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-function ButtonArrivalDeparture() {
-  const [selected, setSelected] = React.useState("departure")
+function ButtonArrivalDeparture({ value = "departure", onChange }) {
+  const selected = value === "arrival" ? "arrival" : "departure"
 
   return (
     <ButtonGroup>
@@ -38,7 +38,7 @@ function ButtonArrivalDeparture() {
         type="button"
         variant={selected === "departure" ? "default" : "outline"}
         aria-pressed={selected === "departure"}
-        onClick={() => setSelected("departure")}
+        onClick={() => onChange?.("departure")}
       >
         Abfahrt
       </Button>
@@ -46,7 +46,7 @@ function ButtonArrivalDeparture() {
         type="button"
         variant={selected === "arrival" ? "default" : "outline"}
         aria-pressed={selected === "arrival"}
-        onClick={() => setSelected("arrival")}
+        onClick={() => onChange?.("arrival")}
       >
         Ankunft
       </Button>
