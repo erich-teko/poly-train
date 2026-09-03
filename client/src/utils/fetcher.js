@@ -24,9 +24,10 @@ export async function fetcher([url, token]) {
 }
 
 export async function mutationFetcher([url, token], { arg }) {
-  const { method = "POST", body } = arg ?? {}
+  const { method = "POST", body, params } = arg ?? {}
+  const requestUrl = params ? `${url}?${params.toString()}` : url
 
-  const response = await fetch(url, {
+  const response = await fetch(requestUrl, {
     method,
     headers: {
       ...(body ? { "Content-Type": "application/json" } : {}),

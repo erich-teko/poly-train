@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -10,11 +9,13 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useAuth } from "/context/AuthContext"
-import { fetcher } from "@/utils/fetcher"
+import { fetcher, mutationFetcher } from "@/utils/fetcher"
+import { useState } from "react"
 import useSWR from "swr"
+import useSWRMutation from "swr/mutation"
 import ButtonArrivalDeparture from "./ButtonArrivalDeparture"
 import DateTimePicker from "./DateTimePicker"
+import { useAuth } from "/context/AuthContext"
 
 function useStationSuggestions(query, token) {
   const shouldSearch = query && query.length > 2
@@ -36,11 +37,14 @@ function ConnectionSearch({ onConnectionsFound }) {
   const [date, setDate] = useState(new Date())
   const [time, setTime] = useState("10:30")
   const [isArrivalTime, setIsArrivalTime] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [resultCount, setResultCount] = useState(null)
   const startStationSuggestions = useStationSuggestions(startStation, token)
   const endStationSuggestions = useStationSuggestions(endStation, token)
+  const { trigger: searchConnections, isMutating } = useSWRMutation(
+    token ? ["/api/public-transport/connections", token] : null,
+    mutationFetcher
+  )
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -50,7 +54,6 @@ function ConnectionSearch({ onConnectionsFound }) {
       return
     }
 
-    setLoading(true)
     setError("")
 
     try {
@@ -62,24 +65,10 @@ function ConnectionSearch({ onConnectionsFound }) {
         isArrivalTime: String(isArrivalTime),
       })
 
-      const response = await fetch(
-        `/api/public-transport/connections?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(
-          errorData?.error ||
-            "Der Fahrplanservice ist momentan nicht erreichbar."
-        )
-      }
-
-      const data = await response.json().catch(() => null)
+      const data = await searchConnections({
+        method: "GET",
+        params,
+      })
 
       if (!Array.isArray(data)) {
         throw new Error("Der Fahrplanservice ist momentan nicht erreichbar.")
@@ -95,8 +84,6 @@ function ConnectionSearch({ onConnectionsFound }) {
         fetchError.message || "Es konnte keine Verbindung gefunden werden."
       )
       setResultCount(0)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -109,7 +96,8 @@ function ConnectionSearch({ onConnectionsFound }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit}>
+          <fieldset disabled={isMutating} className="flex flex-col gap-6">
           <div className="grid gap-2">
             <Label htmlFor="startStation">Von (Startbahnhof)</Label>
             <Input
@@ -118,17 +106,14 @@ function ConnectionSearch({ onConnectionsFound }) {
               placeholder="Luzern"
               value={startStation}
               onChange={(event) => setStartStation(event.target.value)}
-                list="startStationSuggestions"
+              list="startStationSuggestions"
               required
             />
-              <datalist id="startStationSuggestions">
-                {startStationSuggestions.map((suggestion, index) => (
-                  <option
-                    key={suggestion.id}
-                    value={suggestion.name}
-                  />
-                ))}
-              </datalist>
+            <datalist id="startStationSuggestions">
+              {startStationSuggestions.map((suggestion, index) => (
+                <option key={suggestion.id} value={suggestion.name} />
+              ))}
+            </datalist>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="endStation">Nach (Zielbahnhof)</Label>
@@ -138,17 +123,14 @@ function ConnectionSearch({ onConnectionsFound }) {
               placeholder="Hamburg Hbf"
               value={endStation}
               onChange={(event) => setEndStation(event.target.value)}
-                list="endStationSuggestions"
+              list="endStationSuggestions"
               required
             />
-              <datalist id="endStationSuggestions">
-                {endStationSuggestions.map((suggestion, index) => (
-                  <option
-                    key={suggestion.id}
-                    value={suggestion.name}
-                  />
-                ))}
-              </datalist>
+            <datalist id="endStationSuggestions">
+              {endStationSuggestions.map((suggestion, index) => (
+                <option key={suggestion.id} value={suggestion.name} />
+              ))}
+            </datalist>
           </div>
           <DateTimePicker
             date={date}
@@ -169,10 +151,11 @@ function ConnectionSearch({ onConnectionsFound }) {
           )}
 
           <CardFooter className="flex-col gap-2 border-0 p-0">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Suche läuft..." : "Verbindungen Suchen"}
+            <Button type="submit" className="w-full" disabled={isMutating}>
+              {isMutating ? "Suche läuft..." : "Verbindungen Suchen"}
             </Button>
           </CardFooter>
+          </fieldset>
         </form>
       </CardContent>
     </Card>
