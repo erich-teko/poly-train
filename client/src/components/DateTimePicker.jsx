@@ -1,6 +1,5 @@
 "use client"
 
-import { format } from "date-fns"
 import { ChevronDownIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -12,16 +11,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { formatDate } from "@/utils/dateUtils"
+import { getClientLocale } from "@/utils/localeUtils"
 import { useState } from "react"
 
 function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
+  const locale = getClientLocale()
   const [open, setOpen] = useState(false)
   const selectedDate = date ?? new Date()
 
   return (
-    <FieldGroup className="mx-auto max-w-xs flex-row">
+    <FieldGroup className="w-full flex-row justify-between">
       <Field>
-        <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
+        <FieldLabel htmlFor="date-picker-optional">Datum</FieldLabel>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger
             render={
@@ -30,7 +32,7 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
                 id="date-picker-optional"
                 className="w-32 justify-between font-normal"
               >
-                {selectedDate ? format(selectedDate, "PPP") : "Select date"}
+                {date ? formatDate(locale, date) : "Datum wählen"}
                 <ChevronDownIcon data-icon="inline-end" />
               </Button>
             }
@@ -38,6 +40,7 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
           <PopoverContent className="w-auto overflow-hidden p-0" align="start">
             <Calendar
               mode="single"
+              locale={locale}
               selected={selectedDate}
               captionLayout="dropdown"
               defaultMonth={selectedDate}
@@ -50,7 +53,7 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
         </Popover>
       </Field>
       <Field className="w-32">
-        <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
+        <FieldLabel htmlFor="time-picker-optional">Uhrzeit</FieldLabel>
         <Input
           type="time"
           id="time-picker-optional"
