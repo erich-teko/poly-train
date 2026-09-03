@@ -21,8 +21,8 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
   const selectedDate = date ?? new Date()
 
   return (
-    <FieldGroup className="w-full flex-row justify-between">
-      <Field>
+    <FieldGroup className="grid w-full grid-cols-3 gap-4">
+      <Field className="col-span-2">
         <FieldLabel htmlFor="date-picker-optional">Datum</FieldLabel>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger
@@ -30,7 +30,7 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
               <Button
                 variant="outline"
                 id="date-picker-optional"
-                className="w-32 justify-between font-normal"
+                className="w-full justify-between font-normal"
               >
                 {date ? formatDate(locale, date) : "Datum wählen"}
                 <ChevronDownIcon data-icon="inline-end" />
@@ -52,7 +52,7 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
           </PopoverContent>
         </Popover>
       </Field>
-      <Field className="w-32">
+      <Field>
         <FieldLabel htmlFor="time-picker-optional">Uhrzeit</FieldLabel>
         <Input
           type="time"
