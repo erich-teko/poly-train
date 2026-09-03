@@ -11,8 +11,23 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuth } from "/context/AuthContext"
-import DateTimePicker from "./DateTimePicker"
+import { fetcher } from "@/utils/fetcher"
+import useSWR from "swr"
 import ButtonArrivalDeparture from "./ButtonArrivalDeparture"
+import DateTimePicker from "./DateTimePicker"
+
+function useStationSuggestions(query, token) {
+  const shouldSearch = query && query.length > 2
+  const params = new URLSearchParams(shouldSearch ? { station: query } : {})
+  const { data = [], isValidating } = useSWR(
+    token && shouldSearch
+      ? [`/api/public-transport/stations?${params}`, token]
+      : null,
+    fetcher
+  )
+  // clear stale suggestions while a new search is in-flight
+  return isValidating ? [] : data.filter((item) => item.id != null)
+}
 
 function ConnectionSearch({ onConnectionsFound }) {
   const { token } = useAuth()
@@ -24,6 +39,8 @@ function ConnectionSearch({ onConnectionsFound }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [resultCount, setResultCount] = useState(null)
+  const startStationSuggestions = useStationSuggestions(startStation, token)
+  const endStationSuggestions = useStationSuggestions(endStation, token)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -101,8 +118,17 @@ function ConnectionSearch({ onConnectionsFound }) {
               placeholder="Luzern"
               value={startStation}
               onChange={(event) => setStartStation(event.target.value)}
+                list="startStationSuggestions"
               required
             />
+              <datalist id="startStationSuggestions">
+                {startStationSuggestions.map((suggestion, index) => (
+                  <option
+                    key={suggestion.id}
+                    value={suggestion.name}
+                  />
+                ))}
+              </datalist>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="endStation">Nach (Zielbahnhof)</Label>
@@ -112,8 +138,17 @@ function ConnectionSearch({ onConnectionsFound }) {
               placeholder="Hamburg Hbf"
               value={endStation}
               onChange={(event) => setEndStation(event.target.value)}
+                list="endStationSuggestions"
               required
             />
+              <datalist id="endStationSuggestions">
+                {endStationSuggestions.map((suggestion, index) => (
+                  <option
+                    key={suggestion.id}
+                    value={suggestion.name}
+                  />
+                ))}
+              </datalist>
           </div>
           <DateTimePicker
             date={date}
