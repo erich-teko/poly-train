@@ -96,7 +96,8 @@ function ConnectionSearch({ onConnectionsFound }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit}>
+          <fieldset disabled={isMutating} className="flex flex-col gap-6">
           <div className="grid gap-2">
             <Label htmlFor="startStation">Von (Startbahnhof)</Label>
             <Input
@@ -154,6 +155,7 @@ function ConnectionSearch({ onConnectionsFound }) {
               {isMutating ? "Suche läuft..." : "Verbindungen Suchen"}
             </Button>
           </CardFooter>
+          </fieldset>
         </form>
       </CardContent>
     </Card>
