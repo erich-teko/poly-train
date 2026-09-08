@@ -4,7 +4,7 @@ import StageCard from "./StageCard.jsx"
 const initialStages = [
   {
     _id: "1",
-    type: "1",
+    type: 0,
     stageStart: "Luzern",
     stageEnd: "Hamburg Hbf",
     startDate: "2026-07-10T09:54:00.000Z",
@@ -14,7 +14,7 @@ const initialStages = [
   },
   {
     _id: "2",
-    type: "1",
+    type: 0,
     stageStart: "Zürich HB",
     stageEnd: "Berlin Hbf",
     startDate: "2026-09-15T08:30:00.000Z",
@@ -24,7 +24,7 @@ const initialStages = [
   },
   {
     _id: "3",
-    type: "1",
+    type: 0,
     stageStart: "Basel",
     stageEnd: "München Hbf",
     startDate: "2026-09-20T11:03:00.000Z",
@@ -34,7 +34,25 @@ const initialStages = [
   },
   {
     _id: "4",
+    type: 1,
+    stageStart: "Luzern",
+    stageEnd: "Luzern",
+    startDate: "2026-07-10T00:00:00.000Z",
+    endDate: "2026-07-10T00:00:00.000Z",
+    note: "Treffpunkt bei der TEKO",
+  },
+   {
+    _id: "5",
     type: 2,
+    stageStart: "Luzern",
+    stageEnd: "Luzern",
+    startDate: "2026-07-10T00:00:00.000Z",
+    endDate: "2026-07-10T00:00:00.000Z",
+    note: "Treffpunkt bei der TEKO",
+  },
+   {
+    _id: "6",
+    type: 3,
     stageStart: "Luzern",
     stageEnd: "Luzern",
     startDate: "2026-07-10T00:00:00.000Z",
@@ -43,13 +61,33 @@ const initialStages = [
   },
 ]
 
-function StageList() {
-  const [stages] = useState(() =>
-    [...initialStages].sort(
-      (firstStage, secondStage) =>
-        new Date(firstStage.startDate) - new Date(secondStage.startDate)
-    )
+function sortStages(stages) {
+  return [...stages].sort(
+    (firstStage, secondStage) =>
+      new Date(firstStage.startDate) - new Date(secondStage.startDate)
   )
+}
+
+function StageList({ stages: providedStages, onStagesChange }) {
+  const [stages, setStages] = useState(() =>
+    sortStages(providedStages || initialStages)
+  )
+
+  const handleStageSave = async (stageId, changes) => {
+    const previousStages = stages
+    const updatedStages = sortStages(
+      stages.map((stage) =>
+        stage._id === stageId ? { ...stage, ...changes } : stage
+      )
+    )
+    setStages(updatedStages)
+
+    try {
+      await onStagesChange?.(updatedStages)
+    } catch {
+      setStages(previousStages)
+    }
+  }
 
   return (
     <div className="w-full space-y-6">
@@ -61,7 +99,11 @@ function StageList() {
       {stages.length > 0 && (
         <div className="flex w-full flex-col gap-4">
           {stages.map((journey) => (
-            <StageCard key={journey._id} {...journey} />
+            <StageCard
+              key={journey._id}
+              {...journey}
+              onSave={(changes) => handleStageSave(journey._id, changes)}
+            />
           ))}
         </div>
       )}
