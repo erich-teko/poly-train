@@ -1,19 +1,79 @@
 import { Train, Plus } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "/context/AuthContext"
+import useSWR, { useSWRConfig } from "swr"
+import useSWRMutation from "swr/mutation"
+import { fetcher, mutationFetcher } from "@/utils/fetcher"
+import { toast } from "@/components/ui/toast"
+import { formatDuration } from "@/utils/durationUtils"
+import { formatTime } from "@/utils/timeUtils"
 
-function ConnectionSelectionCard({
-  category,
-  duration,
-  departureTime,
-  departureStation,
-  departurePlatform,
-  arrivalTime,
-  arrivalStation,
-  arrivalPlatform,
-  transfers,
-  onSelect,
-}) {
+function ConnectionSelectionCard({ connection, index, journeyId }) {
+  const { token } = useAuth()
+  const { mutate } = useSWRConfig()
+  const journeyUrl = `/api/journeys/${journeyId}`
+  const { data: journey } = useSWR(
+    token && journeyId ? [journeyUrl, token] : null,
+    fetcher
+  )
+  const { trigger: save, isMutating } = useSWRMutation(
+    token ? [journeyUrl, token] : null,
+    mutationFetcher
+  )
+
+  const onAddConnection = async () => {
+    if (!journey) return
+
+    const newStage = {
+      type: 0,
+      stageStart: connection.from.station?.name || connection.from.name || "-",
+      stageEnd: connection.to.station?.name || connection.to.name || "-",
+      startDate: connection.from.departure,
+      endDate: connection.to.arrival,
+      note: "",
+      trainConnection: connection,
+    }
+
+    try {
+      await save({
+        method: "PUT",
+        body: {
+          ...journey,
+          stages: [...(journey.stages || []), newStage],
+        },
+      })
+
+      await mutate([`/api/journeys/${journeyId}`, token])
+    } catch (error) {
+      toast.add({
+        title: journeyId
+          ? "Fehler beim Aktualisieren der Reise"
+          : "Fehler beim Erstellen der Reise",
+        description:
+          error?.message ?? "Die Reise konnte nicht gespeichert werden.",
+        type: "error",
+      })
+    }
+  }
+
+  const departure = connection.from || {}
+  const arrival = connection.to || {}
+  const products = connection.products || []
+  const category =
+    Array.isArray(products) && products.length > 0
+      ? products.join(" | ")
+      : "Zug"
+  const departurePlatform = departure.platform || "-"
+  const arrivalPlatform = arrival.platform || "-"
+  const key = `connection-${departure.departure}-${arrival.arrival}-${category}`
+  const duration = formatDuration(connection?.duration)
+  const departureTime = formatTime(departure.departure)
+  const departureStation = departure.station?.name || departure.name || "-"
+  const arrivalTime = formatTime(arrival.arrival)
+  const arrivalStation = arrival.station?.name || arrival.name || "-"
+  const transfers = Number(connection.transfers ?? 0)
+
   return (
     <Card className="mb-3 w-full rounded-xl border-border bg-card text-card-foreground shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
       <CardContent className="flex flex-col gap-4 p-4">
@@ -62,10 +122,20 @@ function ConnectionSelectionCard({
                 <div className="h-[2px] w-12 bg-border" />
               </div>
             ) : (
-              <div className="relative flex h-3 w-16 items-center justify-center">
-                <div className="h-[2px] w-12 bg-border" />
+              <div
+                className="relative flex h-3 items-center justify-center"
+                style={{
+                  width: `${Math.max(56, (transfers - 1) * 20 + 8)}px`,
+                }}
+              >
+                <div
+                  className="h-[2px] bg-border"
+                  style={{
+                    width: `${Math.max(48, (transfers - 1) * 20)}px`,
+                  }}
+                />
                 {Array.from({ length: transfers }, (_, index) => {
-                  const spacing = 12 / Math.max(transfers - 1, 1)
+                  const spacing = 20
                   const offset =
                     index * spacing - ((transfers - 1) * spacing) / 2
 
@@ -105,7 +175,8 @@ function ConnectionSelectionCard({
         {/* Button */}
         <Button
           variant="outline"
-          onClick={onSelect}
+          onClick={onAddConnection}
+          disabled={isMutating || !journey}
           className="mt-1 h-9 w-full border-border bg-transparent font-medium text-foreground hover:bg-accent"
         >
           <Plus className="mr-1.5 h-4 w-4 text-muted-foreground" />
