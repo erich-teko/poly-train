@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,10 +13,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar as DicebearAvatar, Style } from "@dicebear/core"
 import identicon from "@dicebear/styles/identicon.json" with { type: "json" }
+import { SettingsIcon, LogOutIcon } from "lucide-react"
+import UserSettings from "./UserSettings"
 import { useAuth } from "/context/AuthContext"
 
 function UserProfile() {
   const { username, logout } = useAuth()
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const style = new Style(identicon)
   const avatar = new DicebearAvatar(style, {
     seed: username ?? "John",
@@ -41,15 +45,20 @@ function UserProfile() {
       />
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem>Einstellungen</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setSettingsOpen(true)}>
+            <SettingsIcon />
+            Einstellungen
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem variant="destructive" onClick={logout}>
+            <LogOutIcon />
             Abmelden
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
+      <UserSettings open={settingsOpen} onOpenChange={setSettingsOpen} />
     </DropdownMenu>
   )
 }
