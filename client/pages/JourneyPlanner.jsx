@@ -75,6 +75,7 @@ function JourneyPlanner({ projectName }) {
               <StageList
                 newStageType={newStageType}
                 onNewStageHandled={() => setNewStageType(null)}
+                journeyId={journeyId}
               />
             </div>
           </div>
