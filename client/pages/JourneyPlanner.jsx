@@ -40,42 +40,41 @@ function JourneyPlanner({ projectName }) {
               Zurück zum Dashboard
             </Button>
           </div>
-          <p>Journey ID: {journeyId}</p>
           <div className="grid gap-4 lg:grid-cols-3">
-            <div className="flex flex-col gap-4 lg:col-span-1">
+            <div className="flex flex-col gap-4 lg:col-start-1 lg:col-span-1 lg:row-start-2">
               <ConnectionSearch onConnectionsFound={setConnections} />
               <ConnectionSelectionList
                 connections={connections}
                 journeyId={journeyId}
               />
             </div>
-            <div className="flex flex-col gap-4 lg:col-span-2">
-              <div className="flex justify-end">
-                <DropdownMenu>
-                  <DropdownMenuTrigger
-                    render={
-                      <Button type="button" className="w-56">
-                        <Plus />
-                        Hinzufügen
-                      </Button>
-                    }
-                  />
-                  <DropdownMenuContent align="end" className="w-56">
-                    {selectableStageTypes.map((type) => {
-                      const OptionIcon = typeConfig[type].icon
-                      return (
-                        <DropdownMenuItem
-                          key={type}
-                          onClick={() => setNewStageType(type)}
-                        >
-                          {OptionIcon && <OptionIcon className="h-5 w-5" />}
-                          {typeConfig[type].title}
-                        </DropdownMenuItem>
-                      )
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+            <div className="flex justify-end lg:col-start-2 lg:col-span-2 lg:row-start-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button type="button" className="w-56">
+                      <Plus />
+                      Hinzufügen
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent align="end" className="w-56">
+                  {selectableStageTypes.map((type) => {
+                    const OptionIcon = typeConfig[type].icon
+                    return (
+                      <DropdownMenuItem
+                        key={type}
+                        onClick={() => setNewStageType(type)}
+                      >
+                        {OptionIcon && <OptionIcon className="h-5 w-5" />}
+                        {typeConfig[type].title}
+                      </DropdownMenuItem>
+                    )
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="lg:col-start-2 lg:col-span-2 lg:row-start-2">
               <StageList
                 newStageType={newStageType}
                 onNewStageHandled={() => setNewStageType(null)}

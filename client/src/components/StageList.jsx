@@ -117,9 +117,7 @@ function StageList({ newStageType, onNewStageHandled, journeyId }) {
         <p className="text-destructive">{error.message}</p>
       ) : stages.length === 0 ? (
         <p className="text-muted-foreground">Keine Reisen gefunden.</p>
-      ) : (
-        <p className="text-muted-foreground">Deine Reisen:</p>
-      )}
+      ) : null}
 
       {stages.length > 0 && (
         <div className="flex w-full flex-col gap-4">
