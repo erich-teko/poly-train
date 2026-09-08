@@ -36,10 +36,13 @@ function JourneyPlanner({ projectName }) {
           <div className="grid gap-4 lg:grid-cols-3">
             <div className="flex flex-col gap-4 lg:col-span-1">
               <ConnectionSearch onConnectionsFound={setConnections} />
-              <ConnectionSelectionList connections={connections} />
+              <ConnectionSelectionList
+                connections={connections}
+                journeyId={journeyId}
+              />
             </div>
             <div className="flex flex-col gap-4 lg:col-span-2">
-            <StageList />
+              <StageList />
             </div>
           </div>
         </div>
