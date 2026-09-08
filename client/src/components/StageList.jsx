@@ -13,13 +13,7 @@ function sortStages(stages) {
   )
 }
 
-function StageList({
-  stages: providedStages,
-  onStagesChange,
-  newStageType,
-  onNewStageHandled,
-  journeyId,
-}) {
+function StageList({ newStageType, onNewStageHandled, journeyId }) {
   const { token } = useAuth()
   const { mutate } = useSWRConfig()
   const journeyUrl = `/api/journeys/${journeyId}`
@@ -32,14 +26,11 @@ function StageList({
     mutationFetcher
   )
 
-  const [stages, setStages] = useState(() =>
-    sortStages(providedStages || data?.stages || [])
-  )
+  const [stages, setStages] = useState(() => sortStages(data?.stages || []))
 
   useEffect(() => {
-    const nextStages = sortStages(providedStages || data?.stages || [])
-    setStages(nextStages)
-  }, [providedStages, data])
+    setStages(sortStages(data?.stages || []))
+  }, [data])
 
   useEffect(() => {
     if (newStageType === null || newStageType === undefined) return
@@ -64,6 +55,25 @@ function StageList({
     onNewStageHandled?.()
   }, [newStageType, onNewStageHandled])
 
+  const persistStages = async (updatedStages) => {
+    if (!data) return
+
+    const stagesToSave = updatedStages.map((stage) => {
+      const { _id, isNew, ...stageData } = stage
+
+      return isNew ? stageData : { ...stageData, _id }
+    })
+
+    await save({
+      method: "PUT",
+      body: {
+        ...data,
+        stages: stagesToSave,
+      },
+    })
+    await mutate([journeyUrl, token])
+  }
+
   const handleStageSave = async (stageId, changes) => {
     const previousStages = stages
     const updatedStages = sortStages(
@@ -74,24 +84,7 @@ function StageList({
     setStages(updatedStages)
 
     try {
-      if (onStagesChange) {
-        await onStagesChange(updatedStages)
-      } else if (data) {
-        const stagesToSave = updatedStages.map((stage) => {
-          const { _id, isNew, ...stageData } = stage
-
-          return isNew ? stageData : { ...stageData, _id }
-        })
-
-        await save({
-          method: "PUT",
-          body: {
-            ...data,
-            stages: stagesToSave,
-          },
-        })
-        await mutate([journeyUrl, token])
-      }
+      await persistStages(updatedStages)
     } catch {
       setStages(previousStages)
     }
@@ -103,24 +96,7 @@ function StageList({
     setStages(updatedStages)
 
     try {
-      if (onStagesChange) {
-        await onStagesChange(updatedStages)
-      } else if (data) {
-        const stagesToSave = updatedStages.map((stage) => {
-          const { _id, isNew, ...stageData } = stage
-
-          return isNew ? stageData : { ...stageData, _id }
-        })
-
-        await save({
-          method: "PUT",
-          body: {
-            ...data,
-            stages: stagesToSave,
-          },
-        })
-        await mutate([journeyUrl, token])
-      }
+      await persistStages(updatedStages)
     } catch {
       setStages(previousStages)
     }
