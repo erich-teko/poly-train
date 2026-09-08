@@ -9,6 +9,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import DateTimePicker from "./DateTimePicker"
+import ConnectionInfo from "./ConnectionInfo"
 import {
   Building2,
   Camera,
@@ -30,6 +31,7 @@ function StageCard({
   _id,
   transfers,
   type,
+  trainConnection,
   onSave,
   startInEdit = false,
 }) {
@@ -205,6 +207,11 @@ function StageCard({
   }
 
   const nights = activeType === 1 ? calculateNights() : null
+  const connectionInfo = trainConnection || {
+    from: { name: stageStart, departure: startDate },
+    to: { name: stageEnd, arrival: endDate },
+    transfers: transfers ?? 0,
+  }
 
   return (
     <Card className="w-full rounded-xl border-border bg-card text-card-foreground shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
@@ -468,93 +475,7 @@ function StageCard({
               </div>
             ) : (
               /* Connection Layout */
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                {/* Start Station */}
-                <div className="grid flex-1 gap-2">
-                  <Label htmlFor="startStation" className="text-xs">
-                    Von
-                  </Label>
-                  <div className="flex flex-col justify-center rounded-md border border-gray-300 bg-gray-100 p-3 dark:border-gray-600 dark:bg-gray-800">
-                    <div className="text-sm font-medium">
-                      {stageStart || "Nicht angegeben"}
-                    </div>
-                    {!isDateEditable && (
-                      <div className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-                        {startDate
-                          ? new Date(startDate).toLocaleString("de-CH", {
-                              dateStyle: "short",
-                              timeStyle: "short",
-                            })
-                          : "Zeit nicht gesetzt"}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Connection Line */}
-                <div className="flex flex-col items-center px-2">
-                  {transfers === 0 ? (
-                    <span className="mb-1 text-[11px] font-medium text-emerald-500">
-                      Direkt
-                    </span>
-                  ) : (
-                    <span className="mb-1 text-center text-[11px] text-muted-foreground/80">
-                      {transfers !== undefined
-                        ? `${transfers} Umstieg${transfers !== 1 ? "e" : ""}`
-                        : "Keine Angabe"}
-                    </span>
-                  )}
-                  <div
-                    className="relative flex h-3 items-center justify-center"
-                    style={{
-                      width: `${Math.max(56, (transfers - 1) * 20 + 8)}px`,
-                    }}
-                  >
-                    <div
-                      className="h-[2px] bg-border"
-                      style={{
-                        width: `${Math.max(48, (transfers - 1) * 20)}px`,
-                      }}
-                    />
-                    {transfers > 0 &&
-                      Array.from({ length: transfers }, (_, index) => {
-                        const spacing = 20
-                        const offset =
-                          index * spacing - ((transfers - 1) * spacing) / 2
-
-                        return (
-                          <div
-                            key={index}
-                            className="absolute h-1.5 w-1.5 rounded-full bg-foreground/80"
-                            style={{
-                              left: `calc(50% + ${offset}px - 0.375rem)`,
-                            }}
-                          />
-                        )
-                      })}
-                  </div>
-                </div>
-
-                {/* End Station */}
-                <div className="grid flex-1 gap-2">
-                  <Label htmlFor="endStation" className="text-xs">
-                    Nach
-                  </Label>
-                  <div className="flex flex-col justify-center rounded-md border border-gray-300 bg-gray-100 p-3 dark:border-gray-600 dark:bg-gray-800">
-                    <div className="text-sm font-medium">
-                      {stageEnd || "Nicht angegeben"}
-                    </div>
-                    <div className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-                      {endDate
-                        ? new Date(endDate).toLocaleString("de-CH", {
-                            dateStyle: "short",
-                            timeStyle: "short",
-                          })
-                        : "Zeit nicht gesetzt"}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ConnectionInfo connection={connectionInfo} />
             )}
           </div>
         </form>
