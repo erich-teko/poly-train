@@ -13,6 +13,7 @@ import { fetcher, mutationFetcher } from "@/utils/fetcher"
 import { useState } from "react"
 import useSWR from "swr"
 import useSWRMutation from "swr/mutation"
+import { formatTime } from "../utils/timeUtils"
 import ButtonArrivalDeparture from "./ButtonArrivalDeparture"
 import DateTimePicker from "./DateTimePicker"
 import { useAuth } from "/context/AuthContext"
@@ -35,7 +36,7 @@ function ConnectionSearch({ onConnectionsFound }) {
   const [startStation, setStartStation] = useState("")
   const [endStation, setEndStation] = useState("")
   const [date, setDate] = useState(new Date())
-  const [time, setTime] = useState("10:30")
+  const [time, setTime] = useState(formatTime(new Date()))
   const [isArrivalTime, setIsArrivalTime] = useState(false)
   const [error, setError] = useState("")
   const [resultCount, setResultCount] = useState(null)
@@ -98,63 +99,63 @@ function ConnectionSearch({ onConnectionsFound }) {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <fieldset disabled={isMutating} className="flex flex-col gap-6">
-          <div className="grid gap-2">
-            <Label htmlFor="startStation">Von (Startbahnhof)</Label>
-            <Input
-              id="startStation"
-              type="text"
-              placeholder="Luzern"
-              value={startStation}
-              onChange={(event) => setStartStation(event.target.value)}
-              list="startStationSuggestions"
-              required
+            <div className="grid gap-2">
+              <Label htmlFor="startStation">Von (Startbahnhof)</Label>
+              <Input
+                id="startStation"
+                type="text"
+                placeholder="Luzern"
+                value={startStation}
+                onChange={(event) => setStartStation(event.target.value)}
+                list="startStationSuggestions"
+                required
+              />
+              <datalist id="startStationSuggestions">
+                {startStationSuggestions.map((suggestion, index) => (
+                  <option key={suggestion.id} value={suggestion.name} />
+                ))}
+              </datalist>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="endStation">Nach (Zielbahnhof)</Label>
+              <Input
+                id="endStation"
+                type="text"
+                placeholder="Hamburg Hbf"
+                value={endStation}
+                onChange={(event) => setEndStation(event.target.value)}
+                list="endStationSuggestions"
+                required
+              />
+              <datalist id="endStationSuggestions">
+                {endStationSuggestions.map((suggestion, index) => (
+                  <option key={suggestion.id} value={suggestion.name} />
+                ))}
+              </datalist>
+            </div>
+            <DateTimePicker
+              date={date}
+              time={time}
+              onDateChange={setDate}
+              onTimeChange={setTime}
             />
-            <datalist id="startStationSuggestions">
-              {startStationSuggestions.map((suggestion, index) => (
-                <option key={suggestion.id} value={suggestion.name} />
-              ))}
-            </datalist>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="endStation">Nach (Zielbahnhof)</Label>
-            <Input
-              id="endStation"
-              type="text"
-              placeholder="Hamburg Hbf"
-              value={endStation}
-              onChange={(event) => setEndStation(event.target.value)}
-              list="endStationSuggestions"
-              required
+            <ButtonArrivalDeparture
+              value={isArrivalTime ? "arrival" : "departure"}
+              onChange={(value) => setIsArrivalTime(value === "arrival")}
             />
-            <datalist id="endStationSuggestions">
-              {endStationSuggestions.map((suggestion, index) => (
-                <option key={suggestion.id} value={suggestion.name} />
-              ))}
-            </datalist>
-          </div>
-          <DateTimePicker
-            date={date}
-            time={time}
-            onDateChange={setDate}
-            onTimeChange={setTime}
-          />
-          <ButtonArrivalDeparture
-            value={isArrivalTime ? "arrival" : "departure"}
-            onChange={(value) => setIsArrivalTime(value === "arrival")}
-          />
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          {resultCount !== null && (
-            <p className="text-sm text-muted-foreground">
-              {resultCount} Verbindung(en) gefunden.
-            </p>
-          )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            {resultCount !== null && (
+              <p className="text-sm text-muted-foreground">
+                {resultCount} Verbindung(en) gefunden.
+              </p>
+            )}
 
-          <CardFooter className="flex-col gap-2 border-0 p-0">
-            <Button type="submit" className="w-full" disabled={isMutating}>
-              {isMutating ? "Suche läuft..." : "Verbindungen Suchen"}
-            </Button>
-          </CardFooter>
+            <CardFooter className="flex-col gap-2 border-0 p-0">
+              <Button type="submit" className="w-full" disabled={isMutating}>
+                {isMutating ? "Suche läuft..." : "Verbindungen Suchen"}
+              </Button>
+            </CardFooter>
           </fieldset>
         </form>
       </CardContent>
