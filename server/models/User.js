@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    avatarStyle: {
+        type: String,
+        default: "identicon",
+    },
 });
 
 // Export the user model

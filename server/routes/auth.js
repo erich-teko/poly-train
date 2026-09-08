@@ -50,7 +50,12 @@ router.post("/login", async (req, res) => {
             expiresIn: "8h",
         });
 
-        res.status(200).json({ token, userId: user._id, username: user.username });
+        res.status(200).json({
+            token,
+            userId: user._id,
+            username: user.username,
+            avatarStyle: user.avatarStyle,
+        });
     } catch (error) {
         res.status(500).json({ error: "Authentication failed try Again" });
     }

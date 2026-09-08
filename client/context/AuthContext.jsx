@@ -9,9 +9,16 @@ export function AuthProvider({ children }) {
   const [userId, setUserId] = useState(() => localStorage.getItem("userId"))
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"))
   const [username, setUsername] = useState(() => localStorage.getItem("username"))
+  const [avatarStyle, setAvatarStyle] = useState(
+    () => localStorage.getItem("avatarStyle") ?? "identicon"
+  )
   const { trigger: triggerLogin } = useSWRMutation(["/auth/login", null], mutationFetcher)
   const { trigger: triggerLogout } = useSWRMutation(["/auth/logout", null], mutationFetcher)
   const { trigger: triggerRegister } = useSWRMutation(["/auth/register", null], mutationFetcher)
+  const { trigger: triggerUpdateAvatarStyle } = useSWRMutation(
+    token ? ["/api/user/avatar-style", token] : null,
+    mutationFetcher
+  )
 
   const login = async (email, password) => {
     try {
@@ -20,10 +27,12 @@ export function AuthProvider({ children }) {
       setToken(data.token)
       setUserId(data.userId)
       setUsername(data.username)
+      setAvatarStyle(data.avatarStyle ?? "identicon")
       setIsLoggedIn(!!data.token);
       localStorage.setItem("token", data.token)
       localStorage.setItem("userId", data.userId)
       localStorage.setItem("username", data.username)
+      localStorage.setItem("avatarStyle", data.avatarStyle ?? "identicon")
     } catch (error) {
       console.error(error)
       throw new Error("Anmeldung fehlgeschlagen! Bitte überprüfe deine Eingaben.")
@@ -53,9 +62,37 @@ export function AuthProvider({ children }) {
     }
   }
 
+  const updateAvatarStyle = async (style) => {
+    const previousStyle = avatarStyle
+    setAvatarStyle(style)
+    localStorage.setItem("avatarStyle", style)
+
+    try {
+      await triggerUpdateAvatarStyle({
+        method: "PUT",
+        body: { avatarStyle: style },
+      })
+    } catch (error) {
+      console.error(error)
+      // revert if the server couldn't persist the new style
+      setAvatarStyle(previousStyle)
+      localStorage.setItem("avatarStyle", previousStyle)
+    }
+  }
+
   return (
     <AuthContext.Provider
-      value={{ token, isLoggedIn, userId, username, login, logout, register }}
+      value={{
+        token,
+        isLoggedIn,
+        userId,
+        username,
+        avatarStyle,
+        login,
+        logout,
+        register,
+        updateAvatarStyle,
+      }}
     >
       {children}
     </AuthContext.Provider>
