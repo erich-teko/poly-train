@@ -32,6 +32,24 @@ const stagesSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  address: {
+    street: {
+      type: String,
+      trim: true,
+    },
+    postalCode: {
+      type: String,
+      trim: true,
+    },
+    city: {
+      type: String,
+      trim: true,
+    },
+    country: {
+      type: String,
+      trim: true,
+    },
+  },
   note: {
     type: String,
     trim: true,

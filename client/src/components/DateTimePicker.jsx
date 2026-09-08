@@ -15,7 +15,13 @@ import { formatDate } from "@/utils/dateUtils"
 import { getClientLocale } from "@/utils/localeUtils"
 import { useState } from "react"
 
-function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
+function DateTimePicker({
+  date,
+  time,
+  onDateChange,
+  onTimeChange,
+  idPrefix = "date-picker-optional",
+}) {
   const locale = getClientLocale()
   const [open, setOpen] = useState(false)
   const selectedDate = date ?? new Date()
@@ -23,13 +29,13 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
   return (
     <FieldGroup className="grid w-full grid-cols-3 gap-4">
       <Field className="col-span-2">
-        <FieldLabel htmlFor="date-picker-optional">Datum</FieldLabel>
+        <FieldLabel htmlFor={`${idPrefix}-date`}>Datum</FieldLabel>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger
             render={
               <Button
                 variant="outline"
-                id="date-picker-optional"
+                id={`${idPrefix}-date`}
                 className="w-full justify-between font-normal"
               >
                 {date ? formatDate(locale, date) : "Datum wählen"}
@@ -53,10 +59,10 @@ function DateTimePicker({ date, time, onDateChange, onTimeChange }) {
         </Popover>
       </Field>
       <Field>
-        <FieldLabel htmlFor="time-picker-optional">Uhrzeit</FieldLabel>
+        <FieldLabel htmlFor={`${idPrefix}-time`}>Uhrzeit</FieldLabel>
         <Input
           type="time"
-          id="time-picker-optional"
+          id={`${idPrefix}-time`}
           step="60"
           value={time ?? "10:30"}
           onChange={(event) => onTimeChange?.(event.target.value)}
