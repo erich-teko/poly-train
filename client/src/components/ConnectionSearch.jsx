@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { fetcher } from "@/utils/fetcher"
+import { toLocalDateString } from "@/utils/dateUtils"
 import { useState } from "react"
 import useSWR from "swr"
 import { formatTime } from "../utils/timeUtils"
@@ -55,7 +56,7 @@ function ConnectionSearch({ onSearch, isSearching = false, resultCount = null })
     const params = new URLSearchParams({
       startStation: startStation.trim(),
       endStation: endStation.trim(),
-      travelDate: date ? date.toISOString().slice(0, 10) : "",
+      travelDate: date ? toLocalDateString(date) : "",
       travelTime: time,
       isArrivalTime: String(isArrivalTime),
     })
