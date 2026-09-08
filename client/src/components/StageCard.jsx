@@ -1,10 +1,8 @@
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -12,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import DateTimePicker from "./DateTimePicker"
 import ButtonArrivalDeparture from "./ButtonArrivalDeparture"
-import { Plus, Minus, Train, NotepadText, ChevronUp, ChevronDown } from "lucide-react"
+import { Plus, Minus, Train, NotepadText } from "lucide-react"
 
 function StageCard({
   stageStart,
@@ -23,10 +21,6 @@ function StageCard({
   _id,
   transfers,
   type,
-  onMoveUp,
-  onMoveDown,
-  isFirst,
-  isLast,
 }) {
   // Type configuration with icons and descriptions
   const typeConfig = {
@@ -71,7 +65,11 @@ function StageCard({
 
   return (
     <Card className="w-full">
-      <CardHeader className={config.layout === "note" ? "bg-yellow-50 dark:bg-yellow-900" : ""}>
+      <CardHeader
+        className={
+          config.layout === "note" ? "bg-yellow-50 dark:bg-yellow-900" : ""
+        }
+      >
         <CardTitle className="flex items-center gap-2">
           {config.icon}
           <span>{config.title}</span>
@@ -175,28 +173,6 @@ function StageCard({
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex items-center justify-end gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon-xs"
-          onClick={onMoveUp}
-          disabled={isFirst}
-          aria-label="Element nach oben verschieben"
-        >
-          <ChevronUp className="h-3.5 w-3.5" />
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="icon-xs"
-          onClick={onMoveDown}
-          disabled={isLast}
-          aria-label="Element nach unten verschieben"
-        >
-          <ChevronDown className="h-3.5 w-3.5" />
-        </Button>
-      </CardFooter>
     </Card>
   )
 }

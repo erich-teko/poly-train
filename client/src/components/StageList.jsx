@@ -44,25 +44,12 @@ const initialStages = [
 ]
 
 function StageList() {
-  const [stages, setStages] = useState(initialStages)
-
-  const moveStage = (index, direction) => {
-    setStages((currentStages) => {
-      const targetIndex = direction === "up" ? index - 1 : index + 1
-
-      if (targetIndex < 0 || targetIndex >= currentStages.length) {
-        return currentStages
-      }
-
-      const nextStages = [...currentStages]
-      ;[nextStages[index], nextStages[targetIndex]] = [
-        nextStages[targetIndex],
-        nextStages[index],
-      ]
-
-      return nextStages
-    })
-  }
+  const [stages] = useState(() =>
+    [...initialStages].sort(
+      (firstStage, secondStage) =>
+        new Date(firstStage.startDate) - new Date(secondStage.startDate)
+    )
+  )
 
   return (
     <div className="w-full space-y-6">
@@ -73,16 +60,8 @@ function StageList() {
       )}
       {stages.length > 0 && (
         <div className="flex w-full flex-col gap-4">
-          {stages.map((journey, index) => (
-            <StageCard
-              key={journey._id}
-              {...journey}
-              index={index}
-              isFirst={index === 0}
-              isLast={index === stages.length - 1}
-              onMoveUp={() => moveStage(index, "up")}
-              onMoveDown={() => moveStage(index, "down")}
-            />
+          {stages.map((journey) => (
+            <StageCard key={journey._id} {...journey} />
           ))}
         </div>
       )}
