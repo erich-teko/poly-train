@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import StageCard from "./StageCard.jsx"
 
 const initialStages = [
@@ -37,27 +37,27 @@ const initialStages = [
     type: 1,
     stageStart: "Luzern",
     stageEnd: "Luzern",
-    startDate: "2026-07-10T00:00:00.000Z",
-    endDate: "2026-07-10T00:00:00.000Z",
-    note: "Treffpunkt bei der TEKO",
+    startDate: "2026-03-10T00:00:00.000Z",
+    endDate: "2026-03-13T00:00:00.000Z",
+    note: "inkl Pool und PP",
   },
-   {
+  {
     _id: "5",
     type: 2,
     stageStart: "Luzern",
     stageEnd: "Luzern",
-    startDate: "2026-07-10T00:00:00.000Z",
-    endDate: "2026-07-10T00:00:00.000Z",
-    note: "Treffpunkt bei der TEKO",
+    startDate: "2026-03-10T20:00:00.000Z",
+    endDate: "2026-03-10T20:00:00.000Z",
+    note: "Treffpunkt morgen bei der TEKO",
   },
-   {
+  {
     _id: "6",
     type: 3,
     stageStart: "Luzern",
     stageEnd: "Luzern",
-    startDate: "2026-07-10T00:00:00.000Z",
-    endDate: "2026-07-10T00:00:00.000Z",
-    note: "Treffpunkt bei der TEKO",
+    startDate: "2026-03-11T09:00:00.000Z",
+    endDate: "2026-03-10T20:45:00.000Z",
+    note: "TEKO - Hübsch, aber nicht so schön wie die ETH (Bewertung von VSC)",
   },
 ]
 
@@ -68,10 +68,38 @@ function sortStages(stages) {
   )
 }
 
-function StageList({ stages: providedStages, onStagesChange }) {
+function StageList({
+  stages: providedStages,
+  onStagesChange,
+  newStageType,
+  onNewStageHandled,
+}) {
   const [stages, setStages] = useState(() =>
     sortStages(providedStages || initialStages)
   )
+
+  useEffect(() => {
+    if (newStageType === null || newStageType === undefined) return
+
+    const now = new Date().toISOString()
+    setStages((currentStages) =>
+      sortStages([
+        ...currentStages,
+        {
+          _id: `new-${Date.now()}`,
+          type: newStageType,
+          stageStart: "",
+          stageEnd: "",
+          startDate: now,
+          endDate: now,
+          address: {},
+          note: "",
+          isNew: true,
+        },
+      ])
+    )
+    onNewStageHandled?.()
+  }, [newStageType, onNewStageHandled])
 
   const handleStageSave = async (stageId, changes) => {
     const previousStages = stages
@@ -102,6 +130,7 @@ function StageList({ stages: providedStages, onStagesChange }) {
             <StageCard
               key={journey._id}
               {...journey}
+              startInEdit={journey.isNew}
               onSave={(changes) => handleStageSave(journey._id, changes)}
             />
           ))}

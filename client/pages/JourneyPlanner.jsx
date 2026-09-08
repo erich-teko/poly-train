@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Plus } from "lucide-react"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import ConnectionSearch from "../src/components/ConnectionSearch"
@@ -7,11 +7,18 @@ import Footer from "../src/components/Footer"
 import Header from "../src/components/Header"
 import StageList from "../src/components/StageList"
 import { Button } from "../src/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../src/components/ui/dropdown-menu"
 
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
   const navigate = useNavigate()
   const [connections, setConnections] = useState([])
+  const [newStageType, setNewStageType] = useState(null)
 
   const handleBackToDashboard = () => {
     navigate("/dashboard") // Navigate back to the dashboard
@@ -42,7 +49,33 @@ function JourneyPlanner({ projectName }) {
               />
             </div>
             <div className="flex flex-col gap-4 lg:col-span-2">
-              <StageList />
+              <div className="flex justify-end">
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button type="button">
+                        <Plus />
+                        Hinzufügen
+                      </Button>
+                    }
+                  />
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setNewStageType(1)}>
+                      Unterkunft
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setNewStageType(2)}>
+                      Notiz
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setNewStageType(3)}>
+                      Sehenswürdigkeit
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <StageList
+                newStageType={newStageType}
+                onNewStageHandled={() => setNewStageType(null)}
+              />
             </div>
           </div>
         </div>

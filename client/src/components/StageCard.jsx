@@ -31,15 +31,18 @@ function StageCard({
   transfers,
   type,
   onSave,
+  startInEdit = false,
 }) {
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(startInEdit)
   const [draftStartDate, setDraftStartDate] = useState(startDate)
+  const [draftEndDate, setDraftEndDate] = useState(endDate)
   const [draftAddress, setDraftAddress] = useState(() =>
     typeof address === "object" && address !== null
       ? address
       : { street: address || "", postalCode: "", city: "", country: "" }
   )
   const [draftNote, setDraftNote] = useState(note || "")
+  const [draftType, setDraftType] = useState(type)
   const typeConfig = {
     0: {
       icon: <Train className="h-5 w-5" />,
@@ -67,14 +70,16 @@ function StageCard({
     },
   }
 
-  const config = typeConfig[type] || {
+  const activeType = isEditing ? draftType : type
+  const config = typeConfig[activeType] || {
     icon: null,
     title: "Etappe",
-    description: `Kategorie ${type}`,
+    description: `Kategorie ${activeType}`,
     layout: "connection",
   }
 
-  const isDateEditable = type === 1 || type === 2 || type === 3
+  const isDateEditable =
+    activeType === 1 || activeType === 2 || activeType === 3
 
   const handleDateChange = (date) => {
     if (!date) return
@@ -99,25 +104,52 @@ function StageCard({
     setDraftStartDate(updatedDate.toISOString())
   }
 
+  const handleEndDateChange = (date) => {
+    if (!date) return
+
+    const currentDate = draftEndDate ? new Date(draftEndDate) : new Date()
+    const updatedDate = new Date(date)
+    updatedDate.setHours(
+      currentDate.getHours(),
+      currentDate.getMinutes(),
+      currentDate.getSeconds(),
+      currentDate.getMilliseconds()
+    )
+    setDraftEndDate(updatedDate.toISOString())
+  }
+
+  const handleEndTimeChange = (time) => {
+    if (!time) return
+
+    const updatedDate = draftEndDate ? new Date(draftEndDate) : new Date()
+    const [hours, minutes] = time.split(":").map(Number)
+    updatedDate.setHours(hours, minutes, 0, 0)
+    setDraftEndDate(updatedDate.toISOString())
+  }
+
   const handleEdit = () => {
     setDraftStartDate(startDate)
+    setDraftEndDate(endDate)
     setDraftAddress(
       typeof address === "object" && address !== null
         ? address
         : { street: address || "", postalCode: "", city: "", country: "" }
     )
     setDraftNote(note || "")
+    setDraftType(type)
     setIsEditing(true)
   }
 
   const handleCancel = () => {
     setDraftStartDate(startDate)
+    setDraftEndDate(endDate)
     setDraftAddress(
       typeof address === "object" && address !== null
         ? address
         : { street: address || "", postalCode: "", city: "", country: "" }
     )
     setDraftNote(note || "")
+    setDraftType(type)
     setIsEditing(false)
   }
 
@@ -130,7 +162,9 @@ function StageCard({
 
   const handleSave = async () => {
     await onSave?.({
+      type: draftType,
       startDate: draftStartDate,
+      endDate: draftEndDate,
       address: draftAddress,
       note: draftNote,
     })
@@ -154,13 +188,23 @@ function StageCard({
     return `${hours}h ${minutes}min`
   }
 
-  const formatTime = (date) =>
-    date
-      ? new Date(date).toLocaleTimeString("de-DE", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : "--:--"
+  const calculateNights = () => {
+    if (!startDate || !endDate) return null
+
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    const startDay = Date.UTC(
+      start.getFullYear(),
+      start.getMonth(),
+      start.getDate()
+    )
+    const endDay = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate())
+    const nights = Math.round((endDay - startDay) / (1000 * 60 * 60 * 24))
+
+    return nights >= 0 ? nights : null
+  }
+
+  const nights = activeType === 1 ? calculateNights() : null
 
   return (
     <Card className="w-full rounded-xl border-border bg-card text-card-foreground shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
@@ -168,35 +212,97 @@ function StageCard({
         className={
           config.layout === "note"
             ? "bg-yellow-50 dark:bg-yellow-900"
-            : type === 1
+            : activeType === 1
               ? "bg-violet-50 dark:bg-violet-900"
-              : type === 3
+              : activeType === 3
                 ? "bg-green-50 dark:bg-green-900"
                 : ""
         }
       >
         <CardTitle className="flex items-center gap-2">
           {config.icon}
-          <span>{config.title}</span>
+          {isEditing ? (
+            <select
+              aria-label="Kategorie"
+              value={draftType}
+              onChange={(event) => setDraftType(Number(event.target.value))}
+              className="h-9 rounded-md border border-input bg-background px-2 text-base font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value={1}>Unterkunft</option>
+              <option value={2}>Notiz</option>
+              <option value={3}>Sehenswürdigkeit</option>
+            </select>
+          ) : (
+            <span>{config.title}</span>
+          )}
         </CardTitle>
         <CardDescription>
           {isDateEditable ? (
             isEditing ? (
-              <DateTimePicker
-                date={draftStartDate ? new Date(draftStartDate) : undefined}
-                time={
-                  draftStartDate
-                    ? new Date(draftStartDate).toTimeString().slice(0, 5)
-                    : undefined
-                }
-                onDateChange={handleDateChange}
-                onTimeChange={handleTimeChange}
-              />
+              activeType === 1 ? (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <Label>Startdatum</Label>
+                    <DateTimePicker
+                      date={
+                        draftStartDate ? new Date(draftStartDate) : undefined
+                      }
+                      time={
+                        draftStartDate
+                          ? new Date(draftStartDate).toTimeString().slice(0, 5)
+                          : undefined
+                      }
+                      idPrefix="accommodation-start"
+                      onDateChange={handleDateChange}
+                      onTimeChange={handleTimeChange}
+                    />
+                  </div>
+                  <div>
+                    <Label>Enddatum</Label>
+                    <DateTimePicker
+                      date={draftEndDate ? new Date(draftEndDate) : undefined}
+                      time={
+                        draftEndDate
+                          ? new Date(draftEndDate).toTimeString().slice(0, 5)
+                          : undefined
+                      }
+                      idPrefix="accommodation-end"
+                      onDateChange={handleEndDateChange}
+                      onTimeChange={handleEndTimeChange}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <DateTimePicker
+                  date={draftStartDate ? new Date(draftStartDate) : undefined}
+                  time={
+                    draftStartDate
+                      ? new Date(draftStartDate).toTimeString().slice(0, 5)
+                      : undefined
+                  }
+                  onDateChange={handleDateChange}
+                  onTimeChange={handleTimeChange}
+                />
+              )
             ) : startDate ? (
-              new Date(startDate).toLocaleString("de-CH", {
-                dateStyle: "short",
-                timeStyle: "short",
-              })
+              <>
+                {new Date(startDate).toLocaleString("de-CH", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+                {activeType === 1 && endDate && (
+                  <>
+                    {" "}
+                    bis{" "}
+                    {new Date(endDate).toLocaleString("de-CH", {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })}
+                  </>
+                )}
+                {nights !== null &&
+                  ` · ${nights} ${nights === 1 ? "Nacht" : "Nächte"}`}
+              </>
             ) : (
               "Zeit nicht gesetzt"
             )
