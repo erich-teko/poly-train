@@ -1,6 +1,8 @@
 import { ArrowLeft, Plus } from "lucide-react"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import useSWR from "swr"
+import { useAuth } from "../context/AuthContext"
 import ConnectionSearch from "../src/components/ConnectionSearch"
 import ConnectionSelectionList from "../src/components/ConnectionSelectionList"
 import Footer from "../src/components/Footer"
@@ -13,12 +15,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../src/components/ui/dropdown-menu"
+import { fetcher } from "../src/utils/fetcher"
+import typeConfig, { selectableStageTypes } from "../src/utils/typeConfig.js"
 
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
   const navigate = useNavigate()
-  const [connections, setConnections] = useState([])
+  const { token } = useAuth()
+  const [searchParams, setSearchParams] = useState(null)
+  const [searchId, setSearchId] = useState(0)
   const [newStageType, setNewStageType] = useState(null)
+  const {
+    data: connections,
+    error: connectionsError,
+    isLoading: isSearching,
+  } = useSWR(
+    token && searchParams
+      ? [`/api/public-transport/connections?${searchParams}`, token, searchId]
+      : null,
+    fetcher
+  )
+
+  const handleSearch = (params) => {
+    setSearchParams(params)
+    // force a re-fetch even if the params are unchanged from the last search
+    setSearchId((id) => id + 1)
+  }
+
+  const resultCount =
+    searchParams && !isSearching && !connectionsError && Array.isArray(connections)
+      ? connections.length
+      : null
 
   const handleBackToDashboard = () => {
     navigate("/dashboard") // Navigate back to the dashboard
@@ -34,44 +61,52 @@ function JourneyPlanner({ projectName }) {
               <h1 className="text-2xl font-bold">Reiseplanung</h1>
               <p>Deine Reise startet hier mit deiner Planung.</p>
             </div>
-            <Button onClick={handleBackToDashboard}>
+            <Button className="w-56" onClick={handleBackToDashboard}>
               <ArrowLeft />
               Zurück zum Dashboard
             </Button>
           </div>
-          <p>Journey ID: {journeyId}</p>
           <div className="grid gap-4 lg:grid-cols-3">
-            <div className="flex flex-col gap-4 lg:col-span-1">
-              <ConnectionSearch onConnectionsFound={setConnections} />
+            <div className="flex flex-col gap-4 lg:col-start-1 lg:col-span-1 lg:row-start-2">
+              <ConnectionSearch
+                onSearch={handleSearch}
+                isSearching={isSearching}
+                resultCount={resultCount}
+              />
               <ConnectionSelectionList
-                connections={connections}
+                connections={Array.isArray(connections) ? connections : []}
+                error={connectionsError}
+                isLoading={isSearching}
                 journeyId={journeyId}
               />
             </div>
-            <div className="flex flex-col gap-4 lg:col-span-2">
-              <div className="flex justify-end">
-                <DropdownMenu>
-                  <DropdownMenuTrigger
-                    render={
-                      <Button type="button">
-                        <Plus />
-                        Hinzufügen
-                      </Button>
-                    }
-                  />
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setNewStageType(1)}>
-                      Unterkunft
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setNewStageType(2)}>
-                      Notiz
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setNewStageType(3)}>
-                      Sehenswürdigkeit
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+            <div className="flex justify-end lg:col-start-2 lg:col-span-2 lg:row-start-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button type="button" className="w-56">
+                      <Plus />
+                      Hinzufügen
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent align="end" className="w-56">
+                  {selectableStageTypes.map((type) => {
+                    const OptionIcon = typeConfig[type].icon
+                    return (
+                      <DropdownMenuItem
+                        key={type}
+                        onClick={() => setNewStageType(type)}
+                      >
+                        {OptionIcon && <OptionIcon className="h-5 w-5" />}
+                        {typeConfig[type].title}
+                      </DropdownMenuItem>
+                    )
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="lg:col-start-2 lg:col-span-2 lg:row-start-2">
               <StageList
                 newStageType={newStageType}
                 onNewStageHandled={() => setNewStageType(null)}

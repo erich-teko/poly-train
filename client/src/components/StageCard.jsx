@@ -1,27 +1,26 @@
+import { Button } from "@/components/ui/button"
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardAction,
 } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import DateTimePicker from "./DateTimePicker"
-import ConnectionInfo from "./ConnectionInfo"
+import { Label } from "@/components/ui/label"
 import {
-  Building2,
-  Camera,
-  Check,
-  NotepadText,
-  Pencil,
-  Trash2,
-  Train,
-  X,
-} from "lucide-react"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import typeConfig, { selectableStageTypes } from "@/utils/typeConfig.js"
+import { Check, Pencil, Trash2, X } from "lucide-react"
 import { useState } from "react"
+import ConnectionInfo from "./ConnectionInfo"
+import DateTimePicker from "./DateTimePicker"
 
 function StageCard({
   stageStart,
@@ -48,32 +47,6 @@ function StageCard({
   )
   const [draftNote, setDraftNote] = useState(note || "")
   const [draftType, setDraftType] = useState(type)
-  const typeConfig = {
-    0: {
-      icon: <Train className="h-5 w-5" />,
-      title: "Verbindung",
-      description: "Mein Reiseverlauf",
-      layout: "connection",
-    },
-    1: {
-      icon: <Building2 className="h-5 w-5" />,
-      title: "Unterkunft",
-      description: "Meine Unterkunft",
-      layout: "connection",
-    },
-    2: {
-      icon: <NotepadText className="h-5 w-5" />,
-      title: "Notiz",
-      description: "Meine Notiz",
-      layout: "note",
-    },
-    3: {
-      icon: <Camera className="h-5 w-5" />,
-      title: "Sehenswürdigkeit",
-      description: "Meine Sehenswürdigkeit",
-      layout: "connection",
-    },
-  }
 
   const activeType = isEditing ? draftType : type
   const config = typeConfig[activeType] || {
@@ -218,32 +191,29 @@ function StageCard({
 
   return (
     <Card className="w-full rounded-xl border-border bg-card pt-0 text-card-foreground shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
-      <CardHeader
-        className={
-          config.layout === "note"
-            ? "bg-yellow-50 pt-3 pb-3 dark:bg-yellow-900"
-            : activeType === 1
-              ? "bg-violet-50 pt-3 pb-3 dark:bg-violet-900"
-              : activeType === 3
-                ? "bg-green-50 pt-3 pb-3 dark:bg-green-900"
-                : activeType === 0
-                  ? "bg-blue-50 pt-3 pb-3 dark:bg-blue-900"
-                  : ""
-        }
-      >
+      <CardHeader className={config.headerClassName}>
         <CardTitle className="flex items-center gap-2">
-          {config.icon}
+          {config.icon && <config.icon className="h-5 w-5" />}
           {isEditing ? (
-            <select
-              aria-label="Kategorie"
-              value={draftType}
-              onChange={(event) => setDraftType(Number(event.target.value))}
-              className="h-9 rounded-md border border-input bg-background px-2 text-base font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <option value={1}>Unterkunft</option>
-              <option value={2}>Notiz</option>
-              <option value={3}>Sehenswürdigkeit</option>
-            </select>
+            <Select value={draftType} onValueChange={setDraftType}>
+              <SelectTrigger
+                aria-label="Kategorie"
+                className="h-9 min-w-40 text-base font-semibold"
+              >
+                <SelectValue>{(value) => typeConfig[value]?.title}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {selectableStageTypes.map((selectableType) => {
+                  const OptionIcon = typeConfig[selectableType].icon
+                  return (
+                    <SelectItem key={selectableType} value={selectableType}>
+                      {OptionIcon && <OptionIcon className="h-5 w-5" />}
+                      {typeConfig[selectableType].title}
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
           ) : (
             <span>{config.title}</span>
           )}

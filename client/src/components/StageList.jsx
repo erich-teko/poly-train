@@ -2,6 +2,12 @@ import { fetcher, mutationFetcher } from "@/utils/fetcher.js"
 import { useEffect, useState } from "react"
 import useSWR, { useSWRConfig } from "swr"
 import useSWRMutation from "swr/mutation"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import StageCard from "./StageCard.jsx"
 import { useAuth } from "/context/AuthContext"
 import SkeletonCard from "./SkeletonCard.jsx"
@@ -13,13 +19,7 @@ function sortStages(stages) {
   )
 }
 
-function StageList({
-  stages: providedStages,
-  onStagesChange,
-  newStageType,
-  onNewStageHandled,
-  journeyId,
-}) {
+function StageList({ newStageType, onNewStageHandled, journeyId }) {
   const { token } = useAuth()
   const { mutate } = useSWRConfig()
   const journeyUrl = `/api/journeys/${journeyId}`
@@ -32,14 +32,11 @@ function StageList({
     mutationFetcher
   )
 
-  const [stages, setStages] = useState(() =>
-    sortStages(providedStages || data?.stages || [])
-  )
+  const [stages, setStages] = useState(() => sortStages(data?.stages || []))
 
   useEffect(() => {
-    const nextStages = sortStages(providedStages || data?.stages || [])
-    setStages(nextStages)
-  }, [providedStages, data])
+    setStages(sortStages(data?.stages || []))
+  }, [data])
 
   useEffect(() => {
     if (newStageType === null || newStageType === undefined) return
@@ -64,6 +61,25 @@ function StageList({
     onNewStageHandled?.()
   }, [newStageType, onNewStageHandled])
 
+  const persistStages = async (updatedStages) => {
+    if (!data) return
+
+    const stagesToSave = updatedStages.map((stage) => {
+      const { _id, isNew, ...stageData } = stage
+
+      return isNew ? stageData : { ...stageData, _id }
+    })
+
+    await save({
+      method: "PUT",
+      body: {
+        ...data,
+        stages: stagesToSave,
+      },
+    })
+    await mutate([journeyUrl, token])
+  }
+
   const handleStageSave = async (stageId, changes) => {
     const previousStages = stages
     const updatedStages = sortStages(
@@ -74,24 +90,7 @@ function StageList({
     setStages(updatedStages)
 
     try {
-      if (onStagesChange) {
-        await onStagesChange(updatedStages)
-      } else if (data) {
-        const stagesToSave = updatedStages.map((stage) => {
-          const { _id, isNew, ...stageData } = stage
-
-          return isNew ? stageData : { ...stageData, _id }
-        })
-
-        await save({
-          method: "PUT",
-          body: {
-            ...data,
-            stages: stagesToSave,
-          },
-        })
-        await mutate([journeyUrl, token])
-      }
+      await persistStages(updatedStages)
     } catch {
       setStages(previousStages)
     }
@@ -103,24 +102,7 @@ function StageList({
     setStages(updatedStages)
 
     try {
-      if (onStagesChange) {
-        await onStagesChange(updatedStages)
-      } else if (data) {
-        const stagesToSave = updatedStages.map((stage) => {
-          const { _id, isNew, ...stageData } = stage
-
-          return isNew ? stageData : { ...stageData, _id }
-        })
-
-        await save({
-          method: "PUT",
-          body: {
-            ...data,
-            stages: stagesToSave,
-          },
-        })
-        await mutate([journeyUrl, token])
-      }
+      await persistStages(updatedStages)
     } catch {
       setStages(previousStages)
     }
@@ -140,10 +122,17 @@ function StageList({
       ) : error ? (
         <p className="text-destructive">{error.message}</p>
       ) : stages.length === 0 ? (
-        <p className="text-muted-foreground">Keine Reisen gefunden.</p>
-      ) : (
-        <p className="text-muted-foreground">Deine Reisen:</p>
-      )}
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Deine Reisen</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3">
+            <p className="px-2 py-2 text-sm text-muted-foreground">
+              Keine Reisen gefunden.
+            </p>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {stages.length > 0 && (
         <div className="flex w-full flex-col gap-4">
