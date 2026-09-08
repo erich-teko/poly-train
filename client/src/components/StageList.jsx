@@ -97,6 +97,35 @@ function StageList({
     }
   }
 
+  const handleStageDelete = async (stageId) => {
+    const previousStages = stages
+    const updatedStages = stages.filter((stage) => stage._id !== stageId)
+    setStages(updatedStages)
+
+    try {
+      if (onStagesChange) {
+        await onStagesChange(updatedStages)
+      } else if (data) {
+        const stagesToSave = updatedStages.map((stage) => {
+          const { _id, isNew, ...stageData } = stage
+
+          return isNew ? stageData : { ...stageData, _id }
+        })
+
+        await save({
+          method: "PUT",
+          body: {
+            ...data,
+            stages: stagesToSave,
+          },
+        })
+        await mutate([journeyUrl, token])
+      }
+    } catch {
+      setStages(previousStages)
+    }
+  }
+
   return (
     <div className="w-full space-y-6">
       {isLoading ? (
@@ -124,6 +153,7 @@ function StageList({
               {...journey}
               startInEdit={journey.isNew}
               onSave={(changes) => handleStageSave(journey._id, changes)}
+              onDelete={() => handleStageDelete(journey._id)}
             />
           ))}
         </div>

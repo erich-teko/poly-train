@@ -17,6 +17,7 @@ import {
   Check,
   NotepadText,
   Pencil,
+  Trash2,
   Train,
   X,
 } from "lucide-react"
@@ -34,6 +35,7 @@ function StageCard({
   type,
   trainConnection,
   onSave,
+  onDelete,
   startInEdit = false,
 }) {
   const [isEditing, setIsEditing] = useState(startInEdit)
@@ -320,8 +322,8 @@ function StageCard({
             config.description
           )}
         </CardDescription>
-        {type !== 0 && (
-          <CardAction>
+        <CardAction>
+          <div className="flex gap-2">
             {isEditing ? (
               <div className="flex gap-2">
                 <Button type="button" size="sm" onClick={handleSave}>
@@ -338,7 +340,7 @@ function StageCard({
                   Abbrechen
                 </Button>
               </div>
-            ) : (
+            ) : type !== 0 ? (
               <Button
                 type="button"
                 size="icon"
@@ -349,9 +351,19 @@ function StageCard({
               >
                 <Pencil />
               </Button>
-            )}
-          </CardAction>
-        )}
+            ) : null}
+            <Button
+              type="button"
+              size="icon"
+              variant="destructive"
+              title="Etappe löschen"
+              aria-label="Etappe löschen"
+              onClick={() => onDelete?.(_id)}
+            >
+              <Trash2 className="text-white" />
+            </Button>
+          </div>
+        </CardAction>
       </CardHeader>
       <CardContent className={config.layout === "note" ? undefined : "p-4"}>
         <form>
