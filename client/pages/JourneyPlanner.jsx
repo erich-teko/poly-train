@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../src/components/ui/dropdown-menu"
+import typeConfig, { selectableStageTypes } from "../src/utils/typeConfig.js"
 
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
@@ -34,7 +35,7 @@ function JourneyPlanner({ projectName }) {
               <h1 className="text-2xl font-bold">Reiseplanung</h1>
               <p>Deine Reise startet hier mit deiner Planung.</p>
             </div>
-            <Button onClick={handleBackToDashboard}>
+            <Button className="w-56" onClick={handleBackToDashboard}>
               <ArrowLeft />
               Zurück zum Dashboard
             </Button>
@@ -53,22 +54,25 @@ function JourneyPlanner({ projectName }) {
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     render={
-                      <Button type="button">
+                      <Button type="button" className="w-56">
                         <Plus />
                         Hinzufügen
                       </Button>
                     }
                   />
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setNewStageType(1)}>
-                      Unterkunft
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setNewStageType(2)}>
-                      Notiz
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setNewStageType(3)}>
-                      Sehenswürdigkeit
-                    </DropdownMenuItem>
+                  <DropdownMenuContent align="end" className="w-56">
+                    {selectableStageTypes.map((type) => {
+                      const OptionIcon = typeConfig[type].icon
+                      return (
+                        <DropdownMenuItem
+                          key={type}
+                          onClick={() => setNewStageType(type)}
+                        >
+                          {OptionIcon && <OptionIcon className="h-5 w-5" />}
+                          {typeConfig[type].title}
+                        </DropdownMenuItem>
+                      )
+                    })}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
