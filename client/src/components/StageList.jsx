@@ -2,6 +2,12 @@ import { fetcher, mutationFetcher } from "@/utils/fetcher.js"
 import { useEffect, useState } from "react"
 import useSWR, { useSWRConfig } from "swr"
 import useSWRMutation from "swr/mutation"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import StageCard from "./StageCard.jsx"
 import { useAuth } from "/context/AuthContext"
 import SkeletonCard from "./SkeletonCard.jsx"
@@ -116,7 +122,16 @@ function StageList({ newStageType, onNewStageHandled, journeyId }) {
       ) : error ? (
         <p className="text-destructive">{error.message}</p>
       ) : stages.length === 0 ? (
-        <p className="text-muted-foreground">Keine Reisen gefunden.</p>
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Deine Reisen</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3">
+            <p className="px-2 py-2 text-sm text-muted-foreground">
+              Keine Reisen gefunden.
+            </p>
+          </CardContent>
+        </Card>
       ) : null}
 
       {stages.length > 0 && (
