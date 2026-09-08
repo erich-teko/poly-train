@@ -9,14 +9,14 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { fetcher, mutationFetcher } from "@/utils/fetcher"
+import { fetcher } from "@/utils/fetcher"
 import { useState } from "react"
 import useSWR from "swr"
-import useSWRMutation from "swr/mutation"
 import { formatTime } from "../utils/timeUtils"
 import ButtonArrivalDeparture from "./ButtonArrivalDeparture"
 import DateTimePicker from "./DateTimePicker"
 import { useAuth } from "/context/AuthContext"
+import { Skeleton } from "./ui/skeleton"
 
 function useStationSuggestions(query, token) {
   const shouldSearch = query && query.length > 2
@@ -31,7 +31,7 @@ function useStationSuggestions(query, token) {
   return isValidating ? [] : data.filter((item) => item.id != null)
 }
 
-function ConnectionSearch({ onConnectionsFound }) {
+function ConnectionSearch({ onSearch, isSearching = false, resultCount = null }) {
   const { token } = useAuth()
   const [startStation, setStartStation] = useState("")
   const [endStation, setEndStation] = useState("")
@@ -39,15 +39,10 @@ function ConnectionSearch({ onConnectionsFound }) {
   const [time, setTime] = useState(formatTime(new Date()))
   const [isArrivalTime, setIsArrivalTime] = useState(false)
   const [error, setError] = useState("")
-  const [resultCount, setResultCount] = useState(null)
   const startStationSuggestions = useStationSuggestions(startStation, token)
   const endStationSuggestions = useStationSuggestions(endStation, token)
-  const { trigger: searchConnections, isMutating } = useSWRMutation(
-    token ? ["/api/public-transport/connections", token] : null,
-    mutationFetcher
-  )
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
 
     if (!startStation.trim() || !endStation.trim()) {
@@ -57,35 +52,15 @@ function ConnectionSearch({ onConnectionsFound }) {
 
     setError("")
 
-    try {
-      const params = new URLSearchParams({
-        startStation: startStation.trim(),
-        endStation: endStation.trim(),
-        travelDate: date ? date.toISOString().slice(0, 10) : "",
-        travelTime: time,
-        isArrivalTime: String(isArrivalTime),
-      })
+    const params = new URLSearchParams({
+      startStation: startStation.trim(),
+      endStation: endStation.trim(),
+      travelDate: date ? date.toISOString().slice(0, 10) : "",
+      travelTime: time,
+      isArrivalTime: String(isArrivalTime),
+    })
 
-      const data = await searchConnections({
-        method: "GET",
-        params,
-      })
-
-      if (!Array.isArray(data)) {
-        throw new Error("Der Fahrplanservice ist momentan nicht erreichbar.")
-      }
-
-      const connections = data
-      setResultCount(connections.length)
-      onConnectionsFound?.(connections)
-      console.log("Verbindungen gefunden:", connections)
-    } catch (fetchError) {
-      console.error(fetchError)
-      setError(
-        fetchError.message || "Es konnte keine Verbindung gefunden werden."
-      )
-      setResultCount(0)
-    }
+    onSearch?.(params.toString())
   }
 
   return (
@@ -98,7 +73,7 @@ function ConnectionSearch({ onConnectionsFound }) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
-          <fieldset disabled={isMutating} className="flex flex-col gap-6">
+          <fieldset disabled={isSearching} className="flex flex-col gap-6">
             <div className="grid gap-2">
               <Label htmlFor="startStation">Von (Startbahnhof)</Label>
               <Input
@@ -145,6 +120,9 @@ function ConnectionSearch({ onConnectionsFound }) {
             />
 
             {error && <p className="text-sm text-red-500">{error}</p>}
+            {isSearching && (
+              <Skeleton className="h-5 w-full rounded-md bg-muted" />
+            )}
             {resultCount !== null && (
               <p className="text-sm text-muted-foreground">
                 {resultCount} Verbindung(en) gefunden.
@@ -152,8 +130,8 @@ function ConnectionSearch({ onConnectionsFound }) {
             )}
 
             <CardFooter className="flex-col gap-2 border-0 p-0">
-              <Button type="submit" className="w-full" disabled={isMutating}>
-                {isMutating ? "Suche läuft..." : "Verbindungen Suchen"}
+              <Button type="submit" className="w-full" disabled={isSearching}>
+                {isSearching ? "Suche läuft..." : "Verbindungen Suchen"}
               </Button>
             </CardFooter>
           </fieldset>

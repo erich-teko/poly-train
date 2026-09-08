@@ -1,6 +1,8 @@
 import { ArrowLeft, Plus } from "lucide-react"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import useSWR from "swr"
+import { useAuth } from "../context/AuthContext"
 import ConnectionSearch from "../src/components/ConnectionSearch"
 import ConnectionSelectionList from "../src/components/ConnectionSelectionList"
 import Footer from "../src/components/Footer"
@@ -13,13 +15,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../src/components/ui/dropdown-menu"
+import { fetcher } from "../src/utils/fetcher"
 import typeConfig, { selectableStageTypes } from "../src/utils/typeConfig.js"
 
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
   const navigate = useNavigate()
-  const [connections, setConnections] = useState([])
+  const { token } = useAuth()
+  const [searchParams, setSearchParams] = useState(null)
+  const [searchId, setSearchId] = useState(0)
   const [newStageType, setNewStageType] = useState(null)
+  const {
+    data: connections,
+    error: connectionsError,
+    isLoading: isSearching,
+  } = useSWR(
+    token && searchParams
+      ? [`/api/public-transport/connections?${searchParams}`, token, searchId]
+      : null,
+    fetcher
+  )
+
+  const handleSearch = (params) => {
+    setSearchParams(params)
+    // force a re-fetch even if the params are unchanged from the last search
+    setSearchId((id) => id + 1)
+  }
+
+  const resultCount =
+    searchParams && !isSearching && !connectionsError && Array.isArray(connections)
+      ? connections.length
+      : null
 
   const handleBackToDashboard = () => {
     navigate("/dashboard") // Navigate back to the dashboard
@@ -42,9 +68,15 @@ function JourneyPlanner({ projectName }) {
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
             <div className="flex flex-col gap-4 lg:col-start-1 lg:col-span-1 lg:row-start-2">
-              <ConnectionSearch onConnectionsFound={setConnections} />
+              <ConnectionSearch
+                onSearch={handleSearch}
+                isSearching={isSearching}
+                resultCount={resultCount}
+              />
               <ConnectionSelectionList
-                connections={connections}
+                connections={Array.isArray(connections) ? connections : []}
+                error={connectionsError}
+                isLoading={isSearching}
                 journeyId={journeyId}
               />
             </div>
