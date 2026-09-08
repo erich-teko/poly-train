@@ -7,6 +7,7 @@ import {
   CardAction,
 } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import DateTimePicker from "./DateTimePicker"
 import ConnectionInfo from "./ConnectionInfo"
@@ -214,16 +215,18 @@ function StageCard({
   }
 
   return (
-    <Card className="w-full rounded-xl border-border bg-card text-card-foreground shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+    <Card className="w-full rounded-xl border-border bg-card pt-0 text-card-foreground shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
       <CardHeader
         className={
           config.layout === "note"
-            ? "bg-yellow-50 dark:bg-yellow-900"
+            ? "bg-yellow-50 pt-3 pb-3 dark:bg-yellow-900"
             : activeType === 1
-              ? "bg-violet-50 dark:bg-violet-900"
+              ? "bg-violet-50 pt-3 pb-3 dark:bg-violet-900"
               : activeType === 3
-                ? "bg-green-50 dark:bg-green-900"
-                : ""
+                ? "bg-green-50 pt-3 pb-3 dark:bg-green-900"
+                : activeType === 0
+                  ? "bg-blue-50 pt-3 pb-3 dark:bg-blue-900"
+                  : ""
         }
       >
         <CardTitle className="flex items-center gap-2">
@@ -249,7 +252,6 @@ function StageCard({
               activeType === 1 ? (
                 <div className="flex flex-col gap-3">
                   <div>
-                    <Label>Startdatum</Label>
                     <DateTimePicker
                       date={
                         draftStartDate ? new Date(draftStartDate) : undefined
@@ -260,12 +262,12 @@ function StageCard({
                           : undefined
                       }
                       idPrefix="accommodation-start"
+                      dateLabel="Startdatum"
                       onDateChange={handleDateChange}
                       onTimeChange={handleTimeChange}
                     />
                   </div>
                   <div>
-                    <Label>Enddatum</Label>
                     <DateTimePicker
                       date={draftEndDate ? new Date(draftEndDate) : undefined}
                       time={
@@ -274,6 +276,7 @@ function StageCard({
                           : undefined
                       }
                       idPrefix="accommodation-end"
+                      dateLabel="Enddatum"
                       onDateChange={handleEndDateChange}
                       onTimeChange={handleEndTimeChange}
                     />
@@ -424,8 +427,10 @@ function StageCard({
                               </>
                             )}
                           </>
+                        ) : typeof address === "string" ? (
+                          address
                         ) : (
-                          address || "Keine Adresse"
+                          "Keine Adresse"
                         )}
                       </div>
                     )}

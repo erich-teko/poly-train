@@ -20,6 +20,7 @@ function DateTimePicker({
   time,
   onDateChange,
   onTimeChange,
+  dateLabel = "Datum",
   idPrefix = "date-picker-optional",
 }) {
   const locale = getClientLocale()
@@ -29,7 +30,7 @@ function DateTimePicker({
   return (
     <FieldGroup className="grid w-full grid-cols-3 gap-4">
       <Field className="col-span-2">
-        <FieldLabel htmlFor={`${idPrefix}-date`}>Datum</FieldLabel>
+        <FieldLabel htmlFor={`${idPrefix}-date`}>{dateLabel}</FieldLabel>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger
             render={

@@ -1,6 +1,6 @@
 import { Train } from "lucide-react"
 import { formatDuration } from "@/utils/durationUtils"
-import { formatTime } from "@/utils/timeUtils"
+import { formatDate, formatTime } from "@/utils/timeUtils"
 
 function ConnectionInfo({ connection = {} }) {
   const departure = connection.from || {}
@@ -13,8 +13,10 @@ function ConnectionInfo({ connection = {} }) {
   const departurePlatform = departure.platform || "-"
   const arrivalPlatform = arrival.platform || "-"
   const duration = formatDuration(connection.duration)
+  const departureDate = formatDate(departure.departure)
   const departureTime = formatTime(departure.departure)
   const departureStation = departure.station?.name || departure.name || "-"
+  const arrivalDate = formatDate(arrival.arrival)
   const arrivalTime = formatTime(arrival.arrival)
   const arrivalStation = arrival.station?.name || arrival.name || "-"
   const transfers = Number(connection.transfers ?? 0)
@@ -33,6 +35,9 @@ function ConnectionInfo({ connection = {} }) {
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         <div className="flex flex-col">
+          <span className="text-xs font-medium text-muted-foreground">
+            {departureDate}
+          </span>
           <span className="text-lg font-bold text-foreground">
             {departureTime}
           </span>
@@ -95,6 +100,9 @@ function ConnectionInfo({ connection = {} }) {
         </div>
 
         <div className="flex flex-col items-end">
+          <span className="text-xs font-medium text-muted-foreground">
+            {arrivalDate}
+          </span>
           <span className="text-lg font-bold text-foreground">
             {arrivalTime}
           </span>
