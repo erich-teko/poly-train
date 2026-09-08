@@ -16,12 +16,10 @@ const stagesSchema = new mongoose.Schema({
   },
   stageStart: {
     type: String,
-    required: true,
     trim: true,
   },
   stageEnd: {
     type: String,
-    required: true,
     trim: true,
   },
   startDate: {

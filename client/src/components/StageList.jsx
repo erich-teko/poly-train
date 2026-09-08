@@ -1,6 +1,7 @@
-import { fetcher } from "@/utils/fetcher.js"
+import { fetcher, mutationFetcher } from "@/utils/fetcher.js"
 import { useEffect, useState } from "react"
-import useSWR from "swr"
+import useSWR, { useSWRConfig } from "swr"
+import useSWRMutation from "swr/mutation"
 import StageCard from "./StageCard.jsx"
 import { useAuth } from "/context/AuthContext"
 import SkeletonCard from "./SkeletonCard.jsx"
@@ -20,9 +21,15 @@ function StageList({
   journeyId,
 }) {
   const { token } = useAuth()
+  const { mutate } = useSWRConfig()
+  const journeyUrl = `/api/journeys/${journeyId}`
   const { data, error, isLoading } = useSWR(
-    token ? [`/api/journeys/${journeyId}`, token] : null,
+    token ? [journeyUrl, token] : null,
     fetcher
+  )
+  const { trigger: save } = useSWRMutation(
+    token ? [journeyUrl, token] : null,
+    mutationFetcher
   )
 
   const [stages, setStages] = useState(() =>
@@ -67,7 +74,24 @@ function StageList({
     setStages(updatedStages)
 
     try {
-      await onStagesChange?.(updatedStages)
+      if (onStagesChange) {
+        await onStagesChange(updatedStages)
+      } else if (data) {
+        const stagesToSave = updatedStages.map((stage) => {
+          const { _id, isNew, ...stageData } = stage
+
+          return isNew ? stageData : { ...stageData, _id }
+        })
+
+        await save({
+          method: "PUT",
+          body: {
+            ...data,
+            stages: stagesToSave,
+          },
+        })
+        await mutate([journeyUrl, token])
+      }
     } catch {
       setStages(previousStages)
     }

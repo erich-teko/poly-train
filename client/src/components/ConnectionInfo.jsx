@@ -34,7 +34,7 @@ function ConnectionInfo({ connection = {} }) {
       </div>
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-col">
           <span className="text-xs font-medium text-muted-foreground">
             {departureDate}
           </span>
@@ -42,7 +42,7 @@ function ConnectionInfo({ connection = {} }) {
             {departureTime}
           </span>
           <span
-            className="max-w-[100px] truncate text-[10px] font-medium text-muted-foreground"
+            className="text-[13px] font-medium break-words text-muted-foreground"
             title={departureStation}
           >
             {departureStation}
@@ -99,7 +99,7 @@ function ConnectionInfo({ connection = {} }) {
           )}
         </div>
 
-        <div className="flex flex-col items-end">
+        <div className="flex min-w-0 flex-col items-end">
           <span className="text-xs font-medium text-muted-foreground">
             {arrivalDate}
           </span>
@@ -107,7 +107,7 @@ function ConnectionInfo({ connection = {} }) {
             {arrivalTime}
           </span>
           <span
-            className="max-w-[100px] truncate text-right text-[10px] font-medium text-muted-foreground"
+            className="text-right text-[13px] font-medium break-words text-muted-foreground"
             title={arrivalStation}
           >
             {arrivalStation}
