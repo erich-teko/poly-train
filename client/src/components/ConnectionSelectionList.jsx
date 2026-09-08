@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { formatTime } from "../utils/timeUtils"
 import ConnectionSelectionCard from "./ConnectionSelectionCard"
-import { formatDuration } from "../utils/durationUtils"
 
 function ConnectionSelectionList({ connections = [], journeyId }) {
   if (connections.length === 0) {
