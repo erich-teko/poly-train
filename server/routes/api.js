@@ -125,4 +125,21 @@ router.get("/public-transport/connections", checkAuth, async (req, res) => {
   }
 });
 
+router.put("/user/avatar-style", checkAuth, async (req, res) => {
+  try {
+    const { avatarStyle } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.userData.userId,
+      { avatarStyle },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json({ avatarStyle: user.avatarStyle });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update avatar style" });
+  }
+});
+
 export default router;
