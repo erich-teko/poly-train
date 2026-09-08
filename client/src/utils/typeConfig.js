@@ -6,6 +6,7 @@ const typeConfig = {
     title: "Verbindung",
     description: "Mein Reiseverlauf",
     layout: "connection",
+    headerClassName: "bg-blue-50 pt-3 pb-3 dark:bg-blue-900",
     // Verbindungsetappen entstehen nur automatisch, nie durch Nutzerauswahl
     selectable: false,
   },
@@ -14,6 +15,7 @@ const typeConfig = {
     title: "Unterkunft",
     description: "Meine Unterkunft",
     layout: "connection",
+    headerClassName: "bg-violet-50 pt-3 pb-3 dark:bg-violet-900",
     selectable: true,
   },
   2: {
@@ -21,6 +23,7 @@ const typeConfig = {
     title: "Notiz",
     description: "Meine Notiz",
     layout: "note",
+    headerClassName: "bg-yellow-50 pt-3 pb-3 dark:bg-yellow-900",
     selectable: true,
   },
   3: {
@@ -28,6 +31,7 @@ const typeConfig = {
     title: "Sehenswürdigkeit",
     description: "Meine Sehenswürdigkeit",
     layout: "connection",
+    headerClassName: "bg-green-50 pt-3 pb-3 dark:bg-green-900",
     selectable: true,
   },
 }

@@ -191,19 +191,7 @@ function StageCard({
 
   return (
     <Card className="w-full rounded-xl border-border bg-card pt-0 text-card-foreground shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
-      <CardHeader
-        className={
-          config.layout === "note"
-            ? "bg-yellow-50 pt-3 pb-3 dark:bg-yellow-900"
-            : activeType === 1
-              ? "bg-violet-50 pt-3 pb-3 dark:bg-violet-900"
-              : activeType === 3
-                ? "bg-green-50 pt-3 pb-3 dark:bg-green-900"
-                : activeType === 0
-                  ? "bg-blue-50 pt-3 pb-3 dark:bg-blue-900"
-                  : ""
-        }
-      >
+      <CardHeader className={config.headerClassName}>
         <CardTitle className="flex items-center gap-2">
           {config.icon && <config.icon className="h-5 w-5" />}
           {isEditing ? (
