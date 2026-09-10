@@ -172,18 +172,19 @@ function ConnectionSearch({
               onChange={(value) => setIsArrivalTime(value === "arrival")}
             />
 
-            {error && <p className="text-sm text-red-500">{error}</p>}
-            {isSearching && (
-              <Skeleton className="h-5 w-full rounded-md bg-muted" />
-            )}
-            {resultCount !== null && (
-              <p className="text-sm text-muted-foreground">
-                {resultCount} Verbindung(en) gefunden.
-              </p>
-            )}
-            {!resultCount && !isSearching && (
-              <p className="text-sm text-muted-foreground" />
-            )}
+            <div className="flex min-h-5 items-center">
+              {error ? (
+                <p className="text-sm text-red-500">{error}</p>
+              ) : isSearching ? (
+                <Skeleton className="h-5 w-full rounded-md bg-muted" />
+              ) : resultCount !== null ? (
+                <p className="text-sm text-muted-foreground">
+                  {resultCount} Verbindung(en) gefunden.
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">&nbsp;</p>
+              )}
+            </div>
 
             <CardFooter className="flex-col gap-2 border-0 p-0">
               <Button type="submit" className="w-full" disabled={isSearching}>
