@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toLocalDateString } from "@/utils/dateUtils"
 import { fetcher } from "@/utils/fetcher"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, X } from "lucide-react"
 import { useState } from "react"
 import useSWR from "swr"
 import { formatTime } from "../utils/timeUtils"
@@ -89,15 +89,29 @@ function ConnectionSearch({
           <fieldset disabled={isSearching} className="flex flex-col gap-6">
             <div className="grid gap-2">
               <Label htmlFor="startStation">Von (Startbahnhof)</Label>
-              <Input
-                id="startStation"
-                type="text"
-                placeholder="Luzern"
-                value={startStation}
-                onChange={(event) => setStartStation(event.target.value)}
-                list="startStationSuggestions"
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="startStation"
+                  type="text"
+                  placeholder="Luzern"
+                  value={startStation}
+                  onChange={(event) => setStartStation(event.target.value)}
+                  list="startStationSuggestions"
+                  className="pr-8"
+                  required
+                />
+                {startStation && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-1/2 right-0 size-7 -translate-y-1/2 border-none shadow-none"
+                    onClick={() => setStartStation("")}
+                  >
+                    <X className="size-3.5" />
+                  </Button>
+                )}
+              </div>
               <datalist id="startStationSuggestions">
                 {startStationSuggestions.map((suggestion, index) => (
                   <option key={suggestion.id} value={suggestion.name} />
@@ -118,15 +132,29 @@ function ConnectionSearch({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="endStation">Nach (Zielbahnhof)</Label>
-              <Input
-                id="endStation"
-                type="text"
-                placeholder="Hamburg Hbf"
-                value={endStation}
-                onChange={(event) => setEndStation(event.target.value)}
-                list="endStationSuggestions"
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="endStation"
+                  type="text"
+                  placeholder="Hamburg Hbf"
+                  value={endStation}
+                  onChange={(event) => setEndStation(event.target.value)}
+                  list="endStationSuggestions"
+                  className="pr-8"
+                  required
+                />
+                {endStation && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-1/2 right-0 size-7 -translate-y-1/2 border-none shadow-none"
+                    onClick={() => setEndStation("")}
+                  >
+                    <X className="size-3.5" />
+                  </Button>
+                )}
+              </div>
               <datalist id="endStationSuggestions">
                 {endStationSuggestions.map((suggestion, index) => (
                   <option key={suggestion.id} value={suggestion.name} />
