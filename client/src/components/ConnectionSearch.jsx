@@ -9,15 +9,16 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { fetcher } from "@/utils/fetcher"
 import { toLocalDateString } from "@/utils/dateUtils"
+import { fetcher } from "@/utils/fetcher"
+import { ArrowUpDown } from "lucide-react"
 import { useState } from "react"
 import useSWR from "swr"
 import { formatTime } from "../utils/timeUtils"
 import ButtonArrivalDeparture from "./ButtonArrivalDeparture"
 import DateTimePicker from "./DateTimePicker"
-import { useAuth } from "/context/AuthContext"
 import { Skeleton } from "./ui/skeleton"
+import { useAuth } from "/context/AuthContext"
 
 function useStationSuggestions(query, token) {
   const shouldSearch = query && query.length > 2
@@ -32,7 +33,11 @@ function useStationSuggestions(query, token) {
   return isValidating ? [] : data.filter((item) => item.id != null)
 }
 
-function ConnectionSearch({ onSearch, isSearching = false, resultCount = null }) {
+function ConnectionSearch({
+  onSearch,
+  isSearching = false,
+  resultCount = null,
+}) {
   const { token } = useAuth()
   const [startStation, setStartStation] = useState("")
   const [endStation, setEndStation] = useState("")
@@ -64,6 +69,13 @@ function ConnectionSearch({ onSearch, isSearching = false, resultCount = null })
     onSearch?.(params.toString())
   }
 
+  const onSwitchStation = () => {
+    const startStationTemp = startStation
+    setStartStation(endStation)
+    setEndStation(startStationTemp)
+  }
+  const isSwitchStationDisabled = !startStation || !endStation
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -91,6 +103,18 @@ function ConnectionSearch({ onSearch, isSearching = false, resultCount = null })
                   <option key={suggestion.id} value={suggestion.name} />
                 ))}
               </datalist>
+            </div>
+            <div className="-my-3 flex justify-center">
+              <Button
+                onClick={onSwitchStation}
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="border-none shadow-none"
+                disabled={isSwitchStationDisabled}
+              >
+                <ArrowUpDown className="size-5" />
+              </Button>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="endStation">Nach (Zielbahnhof)</Label>
@@ -128,6 +152,9 @@ function ConnectionSearch({ onSearch, isSearching = false, resultCount = null })
               <p className="text-sm text-muted-foreground">
                 {resultCount} Verbindung(en) gefunden.
               </p>
+            )}
+            {!resultCount && !isSearching && (
+              <p className="text-sm text-muted-foreground" />
             )}
 
             <CardFooter className="flex-col gap-2 border-0 p-0">
