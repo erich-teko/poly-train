@@ -26,6 +26,13 @@ function DateTimePicker({
   const locale = getClientLocale()
   const [open, setOpen] = useState(false)
   const selectedDate = date ?? new Date()
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const maxDate = new Date(
+    today.getFullYear() + 5,
+    today.getMonth(),
+    today.getDate()
+  )
 
   return (
     <FieldGroup className="grid w-full grid-cols-3 gap-4">
@@ -51,6 +58,9 @@ function DateTimePicker({
               selected={selectedDate}
               captionLayout="dropdown"
               defaultMonth={selectedDate}
+              startMonth={today}
+              endMonth={maxDate}
+              disabled={{ before: today, after: maxDate }}
               onSelect={(selected) => {
                 onDateChange?.(selected)
                 setOpen(false)
