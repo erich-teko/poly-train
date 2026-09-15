@@ -35,6 +35,10 @@ function JourneyPlanner({ projectName }) {
       : null,
     fetcher
   )
+  const { data: journey } = useSWR(
+    token && journeyId ? [`/api/journeys/${journeyId}`, token] : null,
+    fetcher
+  )
 
   const handleSearch = (params) => {
     setSearchParams(params)
@@ -43,7 +47,10 @@ function JourneyPlanner({ projectName }) {
   }
 
   const resultCount =
-    searchParams && !isSearching && !connectionsError && Array.isArray(connections)
+    searchParams &&
+    !isSearching &&
+    !connectionsError &&
+    Array.isArray(connections)
       ? connections.length
       : null
 
@@ -67,11 +74,12 @@ function JourneyPlanner({ projectName }) {
             </Button>
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
-            <div className="flex flex-col gap-4 lg:col-start-1 lg:col-span-1 lg:row-start-2">
+            <div className="flex flex-col gap-4 lg:col-span-1 lg:col-start-1 lg:row-start-2">
               <ConnectionSearch
                 onSearch={handleSearch}
                 isSearching={isSearching}
                 resultCount={resultCount}
+                initialDate={journey?.startDate}
               />
               <ConnectionSelectionList
                 connections={Array.isArray(connections) ? connections : []}
@@ -80,7 +88,7 @@ function JourneyPlanner({ projectName }) {
                 journeyId={journeyId}
               />
             </div>
-            <div className="flex justify-end lg:col-start-2 lg:col-span-2 lg:row-start-1">
+            <div className="flex justify-end lg:col-span-2 lg:col-start-2 lg:row-start-1">
               <DropdownMenu>
                 <DropdownMenuTrigger
                   render={
@@ -106,7 +114,7 @@ function JourneyPlanner({ projectName }) {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <div className="lg:col-start-2 lg:col-span-2 lg:row-start-2">
+            <div className="lg:col-span-2 lg:col-start-2 lg:row-start-2">
               <StageList
                 newStageType={newStageType}
                 onNewStageHandled={() => setNewStageType(null)}
