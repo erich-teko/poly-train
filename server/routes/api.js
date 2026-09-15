@@ -6,6 +6,13 @@ import { getStations, getConnections } from "../controllers/publicTransportAPI.j
 
 const router = express.Router();
 
+/**
+ * Create a new journey owned by the authenticated user.
+ * @route POST /journeys
+ * @body {object} startLocation, destinationLocation, startDate, endDate, stages
+ * @returns {201} The created journey.
+ * @returns {500} If the journey fails to save.
+ */
 router.post("/journeys", checkAuth, async (req, res) => {
   try {
     const { startLocation, destinationLocation, startDate, endDate, stages } = req.body;
@@ -32,6 +39,16 @@ router.post("/journeys", checkAuth, async (req, res) => {
   }
 });
 
+/**
+ * Update an existing journey owned by the authenticated user.
+ * @route PUT /journeys/:journeyId
+ * @param {string} journeyId - The ID of the journey to update.
+ * @body {object} startLocation, destinationLocation, startDate, endDate, stages
+ * @returns {200} The updated journey.
+ * @returns {404} If the journey does not exist.
+ * @returns {403} If the user does not own the journey.
+ * @returns {500} If the update fails.
+ */
 router.put("/journeys/:journeyId", checkAuth, async (req, res) => {
   try {
     const journeyId = req.params.journeyId;
@@ -56,6 +73,15 @@ router.put("/journeys/:journeyId", checkAuth, async (req, res) => {
   }
 });
 
+/**
+ * Delete a journey owned by the authenticated user.
+ * @route DELETE /journeys/:journeyId
+ * @param {string} journeyId - The ID of the journey to delete.
+ * @returns {204} On successful deletion.
+ * @returns {404} If the journey does not exist.
+ * @returns {403} If the user does not own the journey.
+ * @returns {500} If the deletion fails.
+ */
 router.delete("/journeys/:journeyId", checkAuth, async (req, res) => {
   try {
     const journeyId = req.params.journeyId;
@@ -74,6 +100,12 @@ router.delete("/journeys/:journeyId", checkAuth, async (req, res) => {
   }
 });
 
+/**
+ * Retrieve all journeys owned by the authenticated user.
+ * @route GET /journeys
+ * @returns {200} An array of the user's journeys.
+ * @returns {500} If retrieval fails.
+ */
 router.get("/journeys", checkAuth, async (req, res) => {
   try {
     const ownerId = req.userData.userId;
@@ -84,6 +116,15 @@ router.get("/journeys", checkAuth, async (req, res) => {
   }
 });
 
+/**
+ * Retrieve a single journey owned by the authenticated user.
+ * @route GET /journeys/:journeyId
+ * @param {string} journeyId - The ID of the journey to retrieve.
+ * @returns {200} The requested journey.
+ * @returns {404} If the journey does not exist.
+ * @returns {403} If the user does not own the journey.
+ * @returns {500} If retrieval fails.
+ */
 router.get("/journeys/:journeyId", checkAuth, async (req, res) => {
   try {
     const journeyId = req.params.journeyId;
@@ -101,6 +142,13 @@ router.get("/journeys/:journeyId", checkAuth, async (req, res) => {
   }
 });
 
+/**
+ * Search for public transport stations matching a query.
+ * @route GET /public-transport/stations
+ * @query {string} station - The station name or search term.
+ * @returns {200} Matching stations.
+ * @returns {500} If the lookup fails.
+ */
 router.get("/public-transport/stations", checkAuth, async (req, res) => {
   try {
     const station = req.query.station;
@@ -111,6 +159,17 @@ router.get("/public-transport/stations", checkAuth, async (req, res) => {
   }
 });
 
+/**
+ * Retrieve public transport connections between two stations.
+ * @route GET /public-transport/connections
+ * @query {string} startStation - The departure station.
+ * @query {string} endStation - The arrival station.
+ * @query {string} travelDate - The date of travel.
+ * @query {string} travelTime - The time of travel.
+ * @query {string} isArrivalTime - Whether travelTime is an arrival time.
+ * @returns {200} Matching connections.
+ * @returns {500} If the lookup fails.
+ */
 router.get("/public-transport/connections", checkAuth, async (req, res) => {
   try {
     const startStation = req.query.startStation;
@@ -125,6 +184,14 @@ router.get("/public-transport/connections", checkAuth, async (req, res) => {
   }
 });
 
+/**
+ * Update the authenticated user's avatar style.
+ * @route PUT /user/avatar-style
+ * @body {string} avatarStyle - The new avatar style.
+ * @returns {200} The updated avatar style.
+ * @returns {404} If the user does not exist.
+ * @returns {500} If the update fails.
+ */
 router.put("/user/avatar-style", checkAuth, async (req, res) => {
   try {
     const { avatarStyle } = req.body;

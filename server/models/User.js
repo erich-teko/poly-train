@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Define the user schema
+// Application user account; password is stored hashed (see auth route)
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     avatarStyle: {
+        // Style identifier used to generate the user's avatar on the client
         type: String,
         default: "identicon",
     },

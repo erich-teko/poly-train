@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import User from "./User.js";
 
+// Enumeration of possible stage types within a journey
 const stageTypes = Object.freeze({
   JOURNEY: 0,
   ACCOMODATION: 1,
@@ -8,8 +9,10 @@ const stageTypes = Object.freeze({
   SIGHT: 3,
 });
 
+// A single segment of a journey (a leg, stay, note or sight)
 const stagesSchema = new mongoose.Schema({
   type: {
+    // One of the stageTypes values above
     type: Number,
     enum: Object.values(stageTypes),
     required: true,
@@ -53,12 +56,15 @@ const stagesSchema = new mongoose.Schema({
     trim: true,
   },
   trainConnection: {
+    // Raw connection payload from the public transport API
     type: Object,
   },
 });
 
+// A trip owned by a user, composed of an ordered list of stages
 const journeysSchema = new mongoose.Schema({
   ownerId: {
+    // Reference to the User who owns this journey
     type: mongoose.Schema.Types.ObjectId,
     ref: User,
     required: true,
@@ -83,7 +89,6 @@ const journeysSchema = new mongoose.Schema({
   },
   stages: {
     type: [stagesSchema],
-    //required: true,
   },
 });
 
