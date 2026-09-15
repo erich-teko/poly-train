@@ -19,6 +19,7 @@ import ButtonArrivalDeparture from "./ButtonArrivalDeparture"
 import DateTimePicker from "./DateTimePicker"
 import { Skeleton } from "./ui/skeleton"
 import { useAuth } from "/context/AuthContext"
+import { useEffect } from "react"
 
 function useStationSuggestions(query, token) {
   const shouldSearch = query && query.length > 2
@@ -37,6 +38,7 @@ function ConnectionSearch({
   onSearch,
   isSearching = false,
   resultCount = null,
+  initialDate,
 }) {
   const { token } = useAuth()
   const [startStation, setStartStation] = useState("")
@@ -47,6 +49,10 @@ function ConnectionSearch({
   const [error, setError] = useState("")
   const startStationSuggestions = useStationSuggestions(startStation, token)
   const endStationSuggestions = useStationSuggestions(endStation, token)
+
+  useEffect(() => {
+    if (initialDate) setDate(new Date(initialDate))
+  }, [initialDate])
 
   const handleSubmit = (event) => {
     event.preventDefault()
