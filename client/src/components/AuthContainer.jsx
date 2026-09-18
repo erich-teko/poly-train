@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
 import Logo from "./Logo"
 
+// Displays the login and registration forms.
 function AuthContainer({ projectName, formType = "login" }) {
   const navigate = useNavigate()
 
