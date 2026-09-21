@@ -21,6 +21,7 @@ export function DatePickerWithRange({ title, datePeriod, setDatePeriod, numberOf
   const [open, setOpen] = useState(false)
   const locale = getClientLocale()
 
+  // Reset the temporary selection whenever the picker opens.
   const handleOpenChange = (isOpen) => {
     if (isOpen) {
       setPendingDate(datePeriod || undefined)
@@ -28,6 +29,7 @@ export function DatePickerWithRange({ title, datePeriod, setDatePeriod, numberOf
     setOpen(isOpen)
   }
 
+  // Commit the temporary date range selected by the user.
   const handleApply = () => {
     setDatePeriod(pendingDate)
     setOpen(false)

@@ -18,6 +18,7 @@ import { useAuth } from "/context/AuthContext"
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
 
+// Validate registration data and create a new account.
 function RegisterForm({ projectName }) {
   const { register } = useAuth()
   const navigate = useNavigate()
@@ -45,6 +46,7 @@ function RegisterForm({ projectName }) {
     setPasswordError(null)
   }, [password, confirmPassword])
 
+  // Register the user and navigate to the login screen.
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {

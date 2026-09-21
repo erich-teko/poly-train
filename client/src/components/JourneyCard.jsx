@@ -19,6 +19,7 @@ import { useAuth } from "../../context/AuthContext"
 import { mutationFetcher } from "../utils/fetcher"
 import { JourneyDialog } from "./JourneyDialog"
 
+// Display a journey with actions for opening, editing, and deleting it.
 function JourneyCard({ journey }) {
   const { token } = useAuth()
   const { mutate } = useSWRConfig()
@@ -30,15 +31,18 @@ function JourneyCard({ journey }) {
   const locale = getClientLocale()
   const stagesCount = journey.stages.length
   const navigate = useNavigate()
+  // Open the journey planner for this journey.
   const onClick = () => {
     navigate(`/journey/${journey._id}`)
   }
 
+  // Open the edit dialog without opening the journey planner.
   const handleEdit = (e) => {
     e.stopPropagation()
     setEditOpen(true)
   }
 
+  // Delete the journey and refresh the dashboard list.
   const handleDelete = async (e) => {
     e.stopPropagation()
     try {

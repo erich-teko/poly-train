@@ -8,6 +8,7 @@ import { fetcher, mutationFetcher } from "@/utils/fetcher"
 import { toast } from "@/components/ui/toast"
 import ConnectionInfo from "./ConnectionInfo"
 
+// Show one connection and allow it to be added to a journey.
 function ConnectionSelectionCard({ connection, journeyId }) {
   const { token } = useAuth()
   const { mutate } = useSWRConfig()
@@ -21,6 +22,7 @@ function ConnectionSelectionCard({ connection, journeyId }) {
     mutationFetcher
   )
 
+  // Append the selected connection as a new journey stage.
   const onAddConnection = async () => {
     if (!journey) return
 

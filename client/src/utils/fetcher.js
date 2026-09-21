@@ -8,6 +8,7 @@ async function readJson(response) {
   }
 }
 
+// Fetch JSON data and convert HTTP errors into useful exceptions.
 export async function fetcher([url, token]) {
   const response = await fetch(url, {
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -23,6 +24,7 @@ export async function fetcher([url, token]) {
   return data
 }
 
+// Send a JSON API mutation using the requested HTTP method.
 export async function mutationFetcher([url, token], { arg }) {
   const { method = "POST", body, params } = arg ?? {}
   const requestUrl = params ? `${url}?${params.toString()}` : url

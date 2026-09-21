@@ -1,3 +1,4 @@
+// Parse API date values while handling missing or invalid input.
 export function parseApiDate(value) {
   if (!value) return null
 

@@ -21,6 +21,7 @@ import { Skeleton } from "./ui/skeleton"
 import { useAuth } from "/context/AuthContext"
 import { useEffect } from "react"
 
+// Load station suggestions once the user has entered enough characters.
 function useStationSuggestions(query, token) {
   const shouldSearch = query && query.length > 2
   const params = new URLSearchParams(shouldSearch ? { station: query } : {})
@@ -34,6 +35,7 @@ function useStationSuggestions(query, token) {
   return isValidating ? [] : data.filter((item) => item.id != null)
 }
 
+// Collect search criteria and request public transport connections.
 function ConnectionSearch({
   onSearch,
   isSearching = false,
@@ -54,6 +56,7 @@ function ConnectionSearch({
     if (initialDate) setDate(new Date(initialDate))
   }, [initialDate])
 
+  // Validate the form and turn its values into API query parameters.
   const handleSubmit = (event) => {
     event.preventDefault()
 
@@ -75,6 +78,7 @@ function ConnectionSearch({
     onSearch?.(params.toString())
   }
 
+  // Swap the start and destination stations.
   const onSwitchStation = () => {
     const startStationTemp = startStation
     setStartStation(endStation)

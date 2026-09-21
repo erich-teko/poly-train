@@ -3,6 +3,7 @@ import Header from "../src/components/Header"
 import { JourneyDialog } from "../src/components/JourneyDialog"
 import Journeys from "../src/components/Journeys"
 
+// Display the user's saved journeys.
 function Dashboard({ projectName }) {
   return (
     <>
