@@ -41,6 +41,7 @@ export function JourneyDialog({ open, setOpen, journeyId }) {
     mutationFetcher
   )
 
+  // Create a new journey or save changes to an existing one.
   const handleSubmit = async (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)

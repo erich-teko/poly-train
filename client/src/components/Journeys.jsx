@@ -4,6 +4,7 @@ import JourneyCard from "./JourneyCard"
 import { useAuth } from "/context/AuthContext"
 import useSWR from "swr"
 
+// Load and display the user's journeys, newest first.
 function Journeys() {
   const { token } = useAuth()
   const {

@@ -12,6 +12,7 @@ import StageCard from "./StageCard.jsx"
 import { useAuth } from "/context/AuthContext"
 import SkeletonCard from "./SkeletonCard.jsx"
 
+// Keep stages ordered by their start date.
 function sortStages(stages) {
   return [...stages].sort(
     (firstStage, secondStage) =>
@@ -19,6 +20,7 @@ function sortStages(stages) {
   )
 }
 
+// Load, display, and persist all stages in a journey.
 function StageList({ newStageType, onNewStageHandled, journeyId }) {
   const { token } = useAuth()
   const { mutate } = useSWRConfig()
@@ -61,6 +63,7 @@ function StageList({ newStageType, onNewStageHandled, journeyId }) {
     onNewStageHandled?.()
   }, [newStageType, onNewStageHandled])
 
+  // Save the current stage list through the journey API.
   const persistStages = async (updatedStages) => {
     if (!data) return
 
@@ -80,6 +83,7 @@ function StageList({ newStageType, onNewStageHandled, journeyId }) {
     await mutate([journeyUrl, token])
   }
 
+  // Update one stage and restore the previous state if saving fails.
   const handleStageSave = async (stageId, changes) => {
     const previousStages = stages
     const updatedStages = sortStages(
@@ -96,6 +100,7 @@ function StageList({ newStageType, onNewStageHandled, journeyId }) {
     }
   }
 
+  // Remove one stage and restore it if the API request fails.
   const handleStageDelete = async (stageId) => {
     const previousStages = stages
     const updatedStages = stages.filter((stage) => stage._id !== stageId)

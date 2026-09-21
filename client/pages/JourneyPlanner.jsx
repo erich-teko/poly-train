@@ -18,6 +18,7 @@ import {
 import { fetcher } from "../src/utils/fetcher"
 import typeConfig, { selectableStageTypes } from "../src/utils/typeConfig.js"
 
+// Coordinate connection searches and editing the selected journey.
 function JourneyPlanner({ projectName }) {
   const { journeyId } = useParams() // Get the journeyId from the URL parameters
   const navigate = useNavigate()
@@ -40,6 +41,7 @@ function JourneyPlanner({ projectName }) {
     fetcher
   )
 
+  // Start a new connection search and force SWR to refresh the results.
   const handleSearch = (params) => {
     setSearchParams(params)
     // force a re-fetch even if the params are unchanged from the last search
@@ -54,6 +56,7 @@ function JourneyPlanner({ projectName }) {
       ? connections.length
       : null
 
+  // Return to the list of saved journeys.
   const handleBackToDashboard = () => {
     navigate("/dashboard") // Navigate back to the dashboard
   }

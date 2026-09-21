@@ -1,5 +1,6 @@
 import * as dateFnsLocales from "date-fns/locale"
 
+// Return the browser locale used by date and calendar components.
 export function getClientLocale() {
   const browserLocale =
     typeof navigator !== "undefined" ? navigator.language : "de-CH"

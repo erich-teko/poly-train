@@ -16,12 +16,14 @@ import { toast } from "@/components/ui/toast"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "/context/AuthContext"
 
+// Submit login credentials and navigate to the application.
 function LoginForm({ projectName }) {
   const { login } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
+  // Authenticate the user and show a toast when login fails.
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {

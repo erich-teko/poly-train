@@ -22,6 +22,7 @@ import { useState } from "react"
 import ConnectionInfo from "./ConnectionInfo"
 import DateTimePicker from "./DateTimePicker"
 
+// Display one stage and manage its edit state.
 function StageCard({
   stageStart,
   stageEnd,
@@ -59,6 +60,7 @@ function StageCard({
   const isDateEditable =
     activeType === 1 || activeType === 2 || activeType === 3
 
+  // Change the date while preserving the current time.
   const handleDateChange = (date) => {
     if (!date) return
 
@@ -73,6 +75,7 @@ function StageCard({
     setDraftStartDate(updatedDate.toISOString())
   }
 
+  // Change the time while preserving the current date.
   const handleTimeChange = (time) => {
     if (!time) return
 
@@ -82,6 +85,7 @@ function StageCard({
     setDraftStartDate(updatedDate.toISOString())
   }
 
+  // Change the end date while preserving the current time.
   const handleEndDateChange = (date) => {
     if (!date) return
 
@@ -96,6 +100,7 @@ function StageCard({
     setDraftEndDate(updatedDate.toISOString())
   }
 
+  // Change the end time while preserving the current date.
   const handleEndTimeChange = (time) => {
     if (!time) return
 
@@ -105,6 +110,7 @@ function StageCard({
     setDraftEndDate(updatedDate.toISOString())
   }
 
+  // Copy the saved stage values into the editable draft.
   const handleEdit = () => {
     setDraftStartDate(startDate)
     setDraftEndDate(endDate)
@@ -118,6 +124,7 @@ function StageCard({
     setIsEditing(true)
   }
 
+  // Discard draft changes and leave edit mode.
   const handleCancel = () => {
     setDraftStartDate(startDate)
     setDraftEndDate(endDate)
@@ -131,6 +138,7 @@ function StageCard({
     setIsEditing(false)
   }
 
+  // Update one field in the draft address.
   const updateDraftAddress = (field, value) => {
     setDraftAddress((currentAddress) => ({
       ...currentAddress,
@@ -138,6 +146,7 @@ function StageCard({
     }))
   }
 
+  // Send the edited stage values to the parent list.
   const handleSave = async () => {
     await onSave?.({
       type: draftType,
@@ -149,7 +158,7 @@ function StageCard({
     setIsEditing(false)
   }
 
-  // Calculate total travel time
+  // Calculate total travel time.
   const calculateTravelTime = () => {
     if (!startDate || !endDate) return "Zeit nicht verfügbar"
 

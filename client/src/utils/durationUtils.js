@@ -1,3 +1,4 @@
+// Format a duration from the transport API for display.
 export function formatDuration(duration) {
   if (!duration) return "-"
 

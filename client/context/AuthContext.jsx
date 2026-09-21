@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
     mutationFetcher
   )
 
+  // Authenticate the user and store the returned session data.
   const login = async (email, password) => {
     try {
       const data = await triggerLogin({ body: { email, password } })
@@ -39,6 +40,7 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // End the current session and clear locally stored user data.
   const logout = async () => {
     try {
       await triggerLogout()
@@ -53,6 +55,7 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Create a new user account.
   const register = async ({ username, email, password }) => {
     try {
       await triggerRegister({ body: { username, email, password } })
@@ -62,6 +65,7 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Update the avatar immediately and revert it if saving fails.
   const updateAvatarStyle = async (style) => {
     const previousStyle = avatarStyle
     setAvatarStyle(style)
